@@ -69,6 +69,18 @@ defmodule NBA.API.Base do
 
         {:ok, %{status: status, data: formatted}}
 
+      {:ok,
+       %Req.Response{
+         status: status,
+         body: %{"resultSet" => %{"rowSet" => rows, "headers" => headers}}
+       }} ->
+        formatted =
+          rows
+          |> Enum.map(&Enum.zip(headers, &1))
+          |> Enum.map(&Enum.into(&1, %{}))
+
+        {:ok, %{status: status, data: formatted}}
+
       # BoxScore and PBP API responses are usually in the form of a
       # JSON object with a "game" key containing the data
       {:ok,
@@ -77,6 +89,15 @@ defmodule NBA.API.Base do
          body: %{"game" => game}
        }} ->
         {:ok, %{status: status, data: game}}
+
+      # Odds API responses are usually in the form of a
+      # JSON object with a "games" key containing the data
+      {:ok,
+       %Req.Response{
+         status: status,
+         body: %{"games" => games}
+       }} ->
+        {:ok, %{status: status, data: games}}
 
       # Scoreboard API responses are usually in plain text format
       # with a "scoreboard" key containing the data
@@ -112,7 +133,7 @@ defmodule NBA.API.Base do
 
       {:ok, %Req.Response{status: status, body: body, headers: headers}} ->
         IO.inspect(headers, label: "Response headers")
-        IO.inspect(body, label: "Unexpected raw response body")
+        IO.inspect(body, label: "Unexpected response body")
         {:error, "Unexpected response (#{status})."}
 
       {:error, err} ->
