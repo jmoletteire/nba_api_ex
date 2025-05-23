@@ -17,7 +17,7 @@ defmodule NBA.Live.OddsTest do
   """
 
   @tag :integration
-  test "fetches live odds data" do
+  test "#1) fetches live odds data" do
     assert {:ok, result} = Odds.get()
     assert is_list(result)
     assert length(result) > 0

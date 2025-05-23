@@ -131,10 +131,15 @@ defmodule NBA.API.Base do
       {:ok, %Req.Response{status: 500..599 = status}} ->
         {:error, "NBA API server error (#{status}). Try again later."}
 
-      {:ok, %Req.Response{status: status, body: body, headers: headers}} ->
-        IO.inspect(headers, label: "Response headers")
-        IO.inspect(body, label: "Unexpected response body")
-        {:error, "Unexpected response (#{status})."}
+      # Handle unexpected JSON structures
+      {:ok, %Req.Response{status: status, body: body}} when is_map(body) ->
+        {:ok, %{status: status, data: body}}
+
+      {:ok, %Req.Response{status: status, body: body}} ->
+        {:error, "Unrecognized JSON structure (#{status}): #{inspect(body)}"}
+
+      {:ok, %Req.Response{status: status, body: nil}} ->
+        {:error, "Empty response body (#{status})."}
 
       {:error, err} ->
         {:error, err}

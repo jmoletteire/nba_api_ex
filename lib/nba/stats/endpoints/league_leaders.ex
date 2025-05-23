@@ -15,6 +15,16 @@ defmodule NBA.Stats.LeagueLeaders do
 
   @endpoint "leagueLeaders"
 
+  @default [
+    LeagueID: "00",
+    PerMode: "Totals",
+    StatCategory: "PTS",
+    Season: "All Time",
+    SeasonType: "Regular Season",
+    Scope: "S",
+    ActiveFlag: "No"
+  ]
+
   @doc """
   Fetches league leaders data.
   ## Parameters
@@ -37,26 +47,43 @@ defmodule NBA.Stats.LeagueLeaders do
   - For All-Time Leaders, the `Season` parameter can be set to "All Time".
   """
   @spec get(keyword(), keyword()) :: {:ok, map()} | {:error, any()}
-  def get(
-        params \\ [
-          LeagueID: "00",
-          PerMode: "Totals",
-          StatCategory: "PTS",
-          Season: "All Time",
-          SeasonType: "Regular Season",
-          Scope: "S",
-          ActiveFlag: "No"
-        ],
-        opts \\ []
-      )
+  def get(params \\ @default, opts \\ [])
 
-  def get(params, opts) when is_list(opts) do
-    NBA.API.Stats.get(@endpoint, params, opts)
-    |> parse_leaders()
+  def get(params, opts) when is_list(params) and is_list(opts) do
+    with :ok <- validate_param_types(params) do
+      final_params = Keyword.merge(@default, params)
+
+      NBA.API.Stats.get(@endpoint, final_params, opts)
+      |> parse_leaders()
+    else
+      {:error, reason} ->
+        {:error, reason}
+    end
+  end
+
+  def get(params, _opts) when not is_list(params) do
+    {:error, "Invalid params: must be a keyword list"}
+  end
+
+  def get(_params, opts) when not is_list(opts) do
+    {:error, "Invalid opts: must be a keyword list"}
   end
 
   def get(_params, _opts) do
-    {:error, "Invalid options: must be a keyword list"}
+    {:error, "Invalid args: check your input and try again"}
+  end
+
+  defp validate_param_types(params) do
+    Enum.reduce_while(params, :ok, fn
+      {:LeagueID, val}, :ok when is_binary(val) -> {:cont, :ok}
+      {:PerMode, val}, :ok when is_binary(val) -> {:cont, :ok}
+      {:StatCategory, val}, :ok when is_binary(val) -> {:cont, :ok}
+      {:Season, val}, :ok when is_binary(val) -> {:cont, :ok}
+      {:SeasonType, val}, :ok when is_binary(val) -> {:cont, :ok}
+      {:Scope, val}, :ok when is_binary(val) -> {:cont, :ok}
+      {:ActiveFlag, val}, :ok when is_binary(val) -> {:cont, :ok}
+      {key, _val}, _ -> {:halt, {:error, "Invalid type for #{inspect(key)}"}}
+    end)
   end
 
   defp parse_leaders({:ok, %{data: data}}), do: {:ok, data}

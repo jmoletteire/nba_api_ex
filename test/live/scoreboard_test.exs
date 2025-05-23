@@ -15,7 +15,7 @@ defmodule NBA.Live.Scoreboard_Test do
   """
 
   @tag :integration
-  test "fetches live scoreboard data" do
+  test "#1) fetches live scoreboard data" do
     assert {:ok, result} = Scoreboard.get()
     assert is_list(result)
     assert length(result) > 0

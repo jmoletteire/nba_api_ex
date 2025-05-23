@@ -19,7 +19,7 @@ defmodule NBA.PlayerAwardsTest do
   """
 
   @tag :integration
-  test "fetches awards for a known player" do
+  test "#1) fetches awards for a known player" do
     # LeBron James
     player_id = 2544
     assert {:ok, result} = PlayerAwards.get(player_id)
@@ -28,7 +28,7 @@ defmodule NBA.PlayerAwardsTest do
   end
 
   @tag :integration
-  test "fetches awards for a player with no awards" do
+  test "#2) fetches awards for a player with no awards" do
     # Chris Duhon
     player_id = 2768
     assert {:ok, result} = PlayerAwards.get(player_id)
@@ -36,20 +36,20 @@ defmodule NBA.PlayerAwardsTest do
   end
 
   @tag :integration
-  test "returns empty for unknown player ID" do
+  test "#3) returns empty for unknown player ID" do
     invalid_id = 99_999_999
     assert {:ok, result} = PlayerAwards.get(invalid_id)
     assert result == %{} or result == nil or map_size(result) == 0
   end
 
   @tag :unit
-  test "handles invalid input type gracefully" do
+  test "#4) handles invalid input type gracefully" do
     assert {:error, "Invalid player_id: must be an integer or numeric string"} =
              PlayerAwards.get("not_an_id")
   end
 
   @tag :integration
-  test "fetch awards data via proxy" do
+  test "#5) fetch awards data via proxy" do
     assert {:ok, _result} =
              PlayerAwards.get(2544,
                connect_options: [

@@ -17,7 +17,7 @@ defmodule NBA.Live.PBPTest do
   """
 
   @tag :integration
-  test "fetches play-by-play data for a known game" do
+  test "#1) fetches play-by-play data for a known game" do
     # Known game ID
     game_id = "0042400311"
     assert {:ok, result} = PBP.get(game_id)
@@ -26,14 +26,14 @@ defmodule NBA.Live.PBPTest do
   end
 
   @tag :integration
-  test "returns empty for unknown (or upcoming) game ID" do
+  test "#2) returns empty for unknown (or upcoming) game ID" do
     invalid_id = "99_999_999"
     assert {:ok, result} = PBP.get(invalid_id)
     assert result == %{} or result == nil or map_size(result) == 0
   end
 
   @tag :unit
-  test "handles invalid input type gracefully" do
+  test "#3) handles invalid input type gracefully" do
     assert {:error, "Invalid game_id: must be a string or numeric string"} =
              PBP.get(true)
   end
