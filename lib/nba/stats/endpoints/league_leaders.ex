@@ -62,11 +62,11 @@ defmodule NBA.Stats.LeagueLeaders do
   end
 
   def get(params, _opts) when not is_list(params) do
-    {:error, "Invalid params: must be a keyword list"}
+    {:error, "Invalid parameters: must be a keyword list"}
   end
 
   def get(_params, opts) when not is_list(opts) do
-    {:error, "Invalid opts: must be a keyword list"}
+    {:error, "Invalid options: must be a keyword list"}
   end
 
   def get(_params, _opts) do

@@ -4,7 +4,7 @@ defmodule NBA.Stats.PlayerAwards do
 
   ## Example
 
-      NBA.PlayerAwards.get(2544)
+      NBA.PlayerAwards.get(PlayerID: "2544")
       {:ok,
        %{
          "All-NBA" => [
@@ -38,33 +38,55 @@ defmodule NBA.Stats.PlayerAwards do
   @doc """
   Fetches awards for a specific player.
   ## Parameters
-  - `player_id`: The ID of the player to fetch awards for.
+  - `params`: A keyword list of parameters for the request.
+    - `PlayerID`: The ID of the player to fetch awards for.
   - `opts`: Optional parameters for the request (e.g., custom headers, proxy settings).
   ## Example
-      iex> NBA.Stats.PlayerAwards.get(2544)
+      iex> NBA.Stats.PlayerAwards.get(PlayerID: "2544")
       {:ok, %{"All-NBA" => [%{"DESCRIPTION" => "All-NBA", ...}]}}
-  ## Notes
-  - The `player_id` can be an integer or a string that can be parsed to an integer.
   ## Returns
   - `{:ok, awards}`: A map of awards grouped by award name.
   - `{:error, reason}`: An error tuple with the reason for failure.
   """
-  @spec get(integer() | binary(), keyword()) :: {:ok, map()} | {:error, any()}
-  def get(player_id, opts \\ [])
+  @spec get(keyword(), keyword()) :: {:ok, map()} | {:error, any()}
+  def get(params, opts \\ [])
 
-  def get(player_id, opts) when is_integer(player_id) do
-    NBA.API.Stats.get(@endpoint, [PlayerID: player_id], opts)
-    |> parse_awards()
-  end
+  def get(params, opts) when is_list(params) and is_list(opts) do
+    with :ok <- validate_params(params),
+         {:ok, player_id} when is_binary(player_id) <- Keyword.fetch(params, :PlayerID) do
+      NBA.API.Stats.get(@endpoint, params, opts)
+      |> parse_awards()
+    else
+      {:ok, other} ->
+        {:error, "Invalid :PlayerID — expected an string, got: #{inspect(other)}"}
 
-  def get(player_id, opts) when is_binary(player_id) do
-    case Integer.parse(player_id) do
-      {int_id, _} -> get(int_id, opts)
-      :error -> {:error, "Invalid player_id: must be an integer or numeric string"}
+      :error ->
+        {:error, "Missing required parameter :PlayerID"}
+
+      {:error, reason} ->
+        {:error, reason}
     end
   end
 
-  def get(_, _), do: {:error, "Invalid player_id: must be an integer or numeric string"}
+  def get(params, _opts) when not is_list(params) do
+    {:error, "Invalid parameters: must be a keyword list"}
+  end
+
+  def get(_params, opts) when not is_list(opts) do
+    {:error, "Invalid options: must be a keyword list"}
+  end
+
+  def get(_params, _opts) do
+    {:error, "Invalid args: check your input and try again"}
+  end
+
+  defp validate_params(params) do
+    Enum.reduce_while(params, :ok, fn
+      {:PlayerID, val}, :ok when is_binary(val) -> {:cont, :ok}
+      {:PlayerID, val}, _ -> {:halt, {:error, "Invalid PlayerID: #{inspect(val)}"}}
+      _, acc -> {:cont, acc}
+    end)
+  end
 
   # Parses the response from the NBA API.
   # It groups the awards by their description and returns a map.
