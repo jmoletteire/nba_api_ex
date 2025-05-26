@@ -12,19 +12,21 @@ defmodule NBA.Stats.BoxScore do
     fourfactors: "boxscorefourfactorsv3",
     hustle: "boxscorehustlev2",
     defense: "boxscoredefensivev2",
-    matchups: "boxscorematchupsv3"
+    matchups: "boxscorematchupsv3",
+    summary: "boxscoresummaryv2"
   }
 
   @keys %{
-    traditional: "Traditional",
-    advanced: "Advanced",
-    misc: "Misc",
-    scoring: "Scoring",
-    usage: "Usage",
-    fourfactors: "FourFactors",
-    hustle: "Hustle",
-    defense: "Defensive",
-    matchups: "Matchups"
+    traditional: "boxScoreTraditional",
+    advanced: "boxScoreAdvanced",
+    misc: "boxScoreMisc",
+    scoring: "boxScoreScoring",
+    usage: "boxScoreUsage",
+    fourfactors: "boxScoreFourFactors",
+    hustle: "boxScoreHustle",
+    defense: "boxScoreDefensive",
+    matchups: "boxScoreMatchups",
+    summary: "GameSummary"
   }
 
   @default [
@@ -61,20 +63,20 @@ defmodule NBA.Stats.BoxScore do
     - `{:ok, box_score}`: A map containing the box score data.
     - `{:error, reason}`: An error tuple with the reason for failure.
   """
-  @spec get(String.t(), keyword(), keyword()) :: {:ok, map()} | {:error, any()}
+  @spec get(atom(), keyword(), keyword()) :: {:ok, map()} | {:error, any()}
   def get(type, params \\ @default, opts \\ [])
 
-  def get(type, params, opts) when is_binary(type) and is_list(params) and is_list(opts) do
+  def get(type, params, opts) when is_atom(type) and is_list(params) and is_list(opts) do
     with :ok <- validate_params(params),
          final_params <- Keyword.merge(@default, params),
-         endpoint when not is_nil(endpoint) <- Map.get(@endpoints, String.to_existing_atom(type)),
-         data_key when not is_nil(data_key) <- Map.get(@keys, String.to_existing_atom(type)) do
+         endpoint when not is_nil(endpoint) <- Map.get(@endpoints, type),
+         data_key when not is_nil(data_key) <- Map.get(@keys, type) do
       NBA.API.Stats.get(endpoint, final_params, opts)
-      |> parse_box_score("boxScore" <> data_key)
+      |> get_parser(type, data_key)
     else
       nil ->
         {:error,
-         "Invalid box score type: #{type} — valid types are #{Enum.join(Map.keys(@endpoints), ", ")}"}
+         "Invalid box score type :#{type} — valid types are #{Enum.join(Map.keys(@endpoints), ", ")}"}
 
       {:error, reason} ->
         {:error, reason}
@@ -84,8 +86,8 @@ defmodule NBA.Stats.BoxScore do
     end
   end
 
-  def get(type, _params, _opts) when not is_binary(type) do
-    {:error, "Invalid box score type: must be a string"}
+  def get(type, _params, _opts) when not is_atom(type) do
+    {:error, "Invalid box score type: must be an atom"}
   end
 
   def get(_type, params, _opts) when not is_list(params) do
@@ -116,6 +118,9 @@ defmodule NBA.Stats.BoxScore do
       {:error, "Missing required parameter :GameID"}
     end
   end
+
+  defp get_parser({:ok, %{data: data}} = _result, :summary, _key), do: {:ok, data}
+  defp get_parser(result, _type, key), do: parse_box_score(result, key)
 
   defp parse_box_score({:ok, %{data: data}}, type), do: {:ok, Map.get(data, type, {})}
   defp parse_box_score({:error, %Jason.DecodeError{}}, _type), do: {:error, :decode_error}

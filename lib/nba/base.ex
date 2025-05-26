@@ -55,6 +55,20 @@ defmodule NBA.API.Base do
 
     # Make the HTTP GET request and parse the response
     case Req.get(url, opts) do
+      {:ok, %Req.Response{status: status, body: %{"resultSets" => sets}}}
+      when is_list(sets) ->
+        formatted =
+          sets
+          |> Enum.map(fn %{"name" => name, "headers" => headers, "rowSet" => rows} ->
+            {
+              name,
+              Enum.map(rows, fn row -> Enum.zip(headers, row) |> Map.new() end)
+            }
+          end)
+          |> Enum.into(%{})
+
+        {:ok, %{status: status, data: formatted}}
+
       # Stats API responses are usually in the form of a JSON object
       # with a "resultSets" key containing the data
       {:ok,
@@ -67,6 +81,7 @@ defmodule NBA.API.Base do
           |> Enum.map(&Enum.zip(headers, &1))
           |> Enum.map(&Enum.into(&1, %{}))
 
+        IO.inspect(formatted, label: "Formatted Data")
         {:ok, %{status: status, data: formatted}}
 
       {:ok,
@@ -81,7 +96,7 @@ defmodule NBA.API.Base do
 
         {:ok, %{status: status, data: formatted}}
 
-      # BoxScore and PBP API responses are usually in the form of a
+      # Live BoxScore and PBP API responses are usually in the form of a
       # JSON object with a "game" key containing the data
       {:ok,
        %Req.Response{
@@ -90,7 +105,7 @@ defmodule NBA.API.Base do
        }} ->
         {:ok, %{status: status, data: game}}
 
-      # Odds API responses are usually in the form of a
+      # Live Odds API responses are usually in the form of a
       # JSON object with a "games" key containing the data
       {:ok,
        %Req.Response{
@@ -99,7 +114,7 @@ defmodule NBA.API.Base do
        }} ->
         {:ok, %{status: status, data: games}}
 
-      # Scoreboard API responses are usually in plain text format
+      # Live Scoreboard API responses are usually in plain text format
       # with a "scoreboard" key containing the data
       {:ok, %Req.Response{status: status, body: body}} when is_binary(body) ->
         case Jason.decode(body) do
@@ -132,14 +147,14 @@ defmodule NBA.API.Base do
         {:error, "NBA API server error (#{status}). Try again later."}
 
       # Handle unexpected JSON structures
-      {:ok, %Req.Response{status: status, body: body}} when is_map(body) ->
-        {:ok, %{status: status, data: body}}
+      {:ok, %Req.Response{status: status, body: nil}} ->
+        {:error, "Empty response body (#{status})."}
+
+      # {:ok, %Req.Response{status: status, body: body}} when is_map(body) ->
+      #   {:ok, %{status: status, data: body}}
 
       {:ok, %Req.Response{status: status, body: body}} ->
         {:error, "Unrecognized JSON structure (#{status}): #{inspect(body)}"}
-
-      {:ok, %Req.Response{status: status, body: nil}} ->
-        {:error, "Empty response body (#{status})."}
 
       {:error, err} ->
         {:error, err}

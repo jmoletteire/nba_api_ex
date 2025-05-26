@@ -50,7 +50,7 @@ defmodule NBA.Stats.LeagueLeaders do
   def get(params \\ @default, opts \\ [])
 
   def get(params, opts) when is_list(params) and is_list(opts) do
-    with :ok <- validate_param_types(params) do
+    with :ok <- validate_params(params) do
       final_params = Keyword.merge(@default, params)
 
       NBA.API.Stats.get(@endpoint, final_params, opts)
@@ -73,7 +73,7 @@ defmodule NBA.Stats.LeagueLeaders do
     {:error, "Invalid args: check your input and try again"}
   end
 
-  defp validate_param_types(params) do
+  defp validate_params(params) do
     Enum.reduce_while(params, :ok, fn
       {:LeagueID, val}, :ok when is_binary(val) -> {:cont, :ok}
       {:PerMode, val}, :ok when is_binary(val) -> {:cont, :ok}
