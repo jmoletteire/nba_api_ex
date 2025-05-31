@@ -3,48 +3,50 @@ defmodule NBA.Live.PBP do
   Fetches play-by-play data for a specific NBA game.
   """
 
+  require NBA.Utils
+  NBA.Utils.def_get_bang(__MODULE__)
+
   @endpoint "playbyplay/playbyplay_"
+
+  @accepted_types %{
+    GameID: [:string]
+  }
+  @default [GameID: nil]
+  @required [:GameID]
 
   @doc """
   Fetches play-by-play data for a specific game.
+
   ## Parameters
-  - `game_id`: The ID of the game to fetch play-by-play data for.
-  - `opts`: Optional parameters for the request (e.g., custom headers, proxy settings).
+  - `params`: A keyword list of parameters for the request.
+      - `GameID`: **(Required)** The unique identifier for the game.
+        - _Type(s)_: Numeric `String`.
+        - _Example_: `GameID: "0022200001"` (for a specific game).
+  - `opts`: A keyword list of additional options for the request, such as headers or timeout settings.
+        - For a list of available options, see the [Req documentation](https://hexdocs.pm/req/Req.html#new/1).
+
   ## Example
       iex> NBA.Live.PBP.get("0042400311")
-      {:ok, %{"gameId" => "0042400311", ...}}
+      {:ok, %{"gameId" => "0042400311", actions: [%{actionNumber: 1, ...}] ...}}
+
   ## Notes
-  - The `game_id` should be a string representing the game ID.
+  - Upcoming games will return an empty map.
+
   ## Returns
   - `{:ok, pbp}`: A map containing the play-by-play data for the game.
   - `{:error, reason}`: An error tuple with the reason for failure.
   """
-  @spec get(String.t(), keyword()) :: {:ok, map()} | {:error, any()}
-  def get(game_id, opts \\ [])
-
-  def get(game_id, opts) when is_binary(game_id) do
-    NBA.API.Live.get(@endpoint <> game_id <> ".json", [], opts)
-    |> parse_response()
+  def get(params \\ @default, opts \\ []) do
+    with :ok <- NBA.Utils.validate_input(params, opts, @accepted_types, @required),
+         params <- Keyword.merge(@default, params),
+         endpoint <- @endpoint <> params[:GameID] <> ".json" do
+      case NBA.API.Live.get(endpoint, params, opts) do
+        {:ok, %{data: data}} -> {:ok, data}
+        {:error, %Jason.DecodeError{}} -> {:ok, %{}}
+        other -> NBA.Utils.handle_api_error(other)
+      end
+    else
+      err -> NBA.Utils.handle_validation_error(err)
+    end
   end
-
-  def get(game_id, _opts) when is_integer(game_id) do
-    get(Integer.to_string(game_id))
-  end
-
-  def get(_game_id, _opts) do
-    {:error, "Invalid game_id: must be a string or numeric string"}
-  end
-
-  defp parse_response({:ok, %{data: data}}), do: {:ok, data}
-  defp parse_response({:error, %Jason.DecodeError{}}), do: {:error, :decode_error}
-
-  # Nonexistent game IDs return 403 Forbidden
-  # In this case, we return an empty map
-  defp parse_response(
-         {:error, "Forbidden (403). You may be blocked or missing required headers."}
-       ),
-       do: {:ok, %{}}
-
-  defp parse_response({:error, _} = err), do: err
-  defp parse_response(other), do: {:error, {:unexpected, other}}
 end

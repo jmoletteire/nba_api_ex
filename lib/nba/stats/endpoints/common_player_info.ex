@@ -11,6 +11,9 @@ defmodule NBA.Stats.CommonPlayerInfo do
       {:ok, %{"name" => "LeBron James", ...}}
   """
 
+  require NBA.Utils
+  NBA.Utils.def_get_bang(__MODULE__)
+
   @endpoint "commonplayerinfo"
 
   @accepted_types %{
@@ -66,27 +69,6 @@ defmodule NBA.Stats.CommonPlayerInfo do
       end
     else
       err -> NBA.Utils.handle_validation_error(err)
-    end
-  end
-
-  @doc """
-  Same as `get/2`, but raises an exception on error and returns only the response on success.
-
-  ## Example
-
-      iex> NBA.Stats.CommonPlayerInfo.get!(PlayerID: 2544)
-      %{"name" => "LeBron James", ...}
-
-      iex> NBA.Stats.CommonPlayerInfo.get!("invalid")
-      ** (ArgumentError) Invalid parameters: ...
-  """
-  def get!(params \\ @default, opts \\ []) do
-    case get(params, opts) do
-      {:ok, result} ->
-        result
-
-      {:error, reason} ->
-        raise ArgumentError, "Failed to fetch CommonPlayerInfo: #{inspect(reason)}"
     end
   end
 end

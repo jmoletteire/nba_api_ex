@@ -16,6 +16,14 @@ defmodule NBA.Stats.CommonAllPlayersTest do
       assert is_list(result)
       assert length(result) > 0
     end
+
+    test "test bang function" do
+      params = [LeagueID: "00", IsOnlyCurrentSeason: "1", Season: "2024-25"]
+
+      assert result = CommonAllPlayers.get!(params)
+      assert is_list(result)
+      assert length(result) > 0
+    end
   end
 
   describe "get/2 invalid args" do

@@ -123,11 +123,22 @@ defmodule NBA.Stats.BoxScore do
         other -> NBA.Utils.handle_api_error(other)
       end
     else
-      err -> NBA.Utils.handle_validation_error(err)
+      nil ->
+        {:error, "Box score type #{inspect(type)} is not supported."}
+
+      err ->
+        NBA.Utils.handle_validation_error(err)
     end
   end
 
   def get(type, _params, _opts) do
     {:error, "Received Box Score type #{inspect(type)}, expected atom :#{type}"}
+  end
+
+  def get!(type, params \\ @default, opts \\ []) do
+    case get(type, params, opts) do
+      {:ok, data} -> data
+      {:error, reason} -> raise "Failed to fetch box score: #{reason}"
+    end
   end
 end

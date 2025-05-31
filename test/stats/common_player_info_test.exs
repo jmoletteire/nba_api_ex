@@ -8,6 +8,12 @@ defmodule NBA.Stats.CommonPlayerInfoTest do
       assert is_list(result)
       assert length(result) > 0
     end
+
+    test "test bang function" do
+      assert result = CommonPlayerInfo.get!(PlayerID: 2544, LeagueID: "00")
+      assert is_list(result)
+      assert length(result) > 0
+    end
   end
 
   describe "get/2 invalid input" do

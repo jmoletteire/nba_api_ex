@@ -113,4 +113,18 @@ defmodule NBA.Utils do
   defp type_check?(:boolean, val), do: is_boolean(val)
   defp type_check?(:float, val), do: is_float(val)
   defp type_check?(_, _), do: false
+
+  defmacro def_get_bang(base_module) do
+    quote do
+      def get!(params \\ [], opts \\ []) do
+        case unquote(base_module).get(params, opts) do
+          {:ok, result} ->
+            result
+
+          {:error, reason} ->
+            raise ArgumentError, "Failed to fetch #{unquote(base_module)}: #{inspect(reason)}"
+        end
+      end
+    end
+  end
 end

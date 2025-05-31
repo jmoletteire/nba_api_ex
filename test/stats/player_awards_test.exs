@@ -15,7 +15,6 @@ defmodule NBA.PlayerAwardsTest do
   - Fetching awards for a player with no awards (Chris Duhon).
   - Fetching awards for an unknown player ID.
   - Handling invalid input types (non-integer player ID).
-  - Fetching awards via proxy. (set NBA_PROXY environment variable)
   """
 
   @tag :integration
@@ -36,7 +35,7 @@ defmodule NBA.PlayerAwardsTest do
   end
 
   @tag :integration
-  test "#3) returns empty for unknown player ID" do
+  test "#3) returns empty for nonexistent player ID" do
     invalid_id = 99_999_999
     assert {:ok, result} = PlayerAwards.get(PlayerID: invalid_id)
     assert result == %{} or result == nil or map_size(result) == 0
@@ -44,8 +43,15 @@ defmodule NBA.PlayerAwardsTest do
 
   @tag :unit
   test "#4) handles invalid input type gracefully" do
-    assert {:error, "Invalid PlayerID: must be an integer or numeric string"} =
+    assert {:error, "Invalid type for PlayerID: got \"not_an_id\", accepts integer, string"} =
              PlayerAwards.get(PlayerID: "not_an_id")
+  end
+
+  @tag :integration
+  test "test bang function" do
+    assert result = PlayerAwards.get!(PlayerID: 2544)
+    assert is_map(result)
+    assert Map.has_key?(result, "All-NBA")
   end
 
   # @tag :integration

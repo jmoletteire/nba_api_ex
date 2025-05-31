@@ -21,6 +21,14 @@ defmodule NBA.Stats.LeagueLeadersTest do
     assert Map.has_key?(hd(result), "PLAYER_ID")
   end
 
+  @tag :integration
+  test "test bang function" do
+    assert result = LeagueLeaders.get!()
+    assert is_list(result)
+    assert length(result) > 0
+    assert Map.has_key?(hd(result), "PLAYER_ID")
+  end
+
   @tag :unit
   test "#2) handles invalid params" do
     assert {:error, "Parameters and Options must be keyword lists or nil"} =

@@ -125,7 +125,7 @@ defmodule NBA.API.Base do
             {:error, "Unexpected JSON structure: #{inspect(decoded)}"}
 
           {:error, err} ->
-            {:error, "Failed to parse JSON: #{inspect(err)}"}
+            {:error, err}
         end
 
       {:ok, %Req.Response{status: 400}} ->

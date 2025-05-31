@@ -24,6 +24,7 @@ defmodule NBA.Stats.PlayerAwards do
              },
          ]
        }}
+
   ## Notes
   - The `DESCRIPTION` field is used as the key for the awards map.
   - The `ALL_NBA_TEAM_NUMBER` field indicates the team number for All-NBA awards.
@@ -32,32 +33,47 @@ defmodule NBA.Stats.PlayerAwards do
   - The `TYPE` field indicates the type of award.
   """
 
-  alias NBA.Utils, as: Util
+  require NBA.Utils
+  NBA.Utils.def_get_bang(__MODULE__)
 
   @endpoint "playerawards"
+
   @keys ~w(DESCRIPTION ALL_NBA_TEAM_NUMBER SEASON CONFERENCE TYPE)
+
+  @accepted_types %{
+    PlayerID: [:integer, :string]
+  }
+
+  @default [PlayerID: nil]
+
+  @required [:PlayerID]
 
   @doc """
   Fetches awards for a specific player.
+
   ## Parameters
   - `params`: A keyword list of parameters for the request.
     - `PlayerID`: The ID of the player to fetch awards for.
-  - `opts`: Optional parameters for the request (e.g., custom headers, proxy settings).
+      - _Type(s)_: `Integer`, Numeric `String`.
+      - _Example_: `PlayerID: 2544` (for LeBron James).
+  - `opts`: A keyword list of options for the request, such as headers or timeout settings.
+    - For a list of available options, see the [Req documentation](https://hexdocs.pm/req/Req.html#new/1).
+
   ## Example
       iex> NBA.Stats.PlayerAwards.get(PlayerID: "2544")
       {:ok, %{"All-NBA" => [%{"DESCRIPTION" => "All-NBA", ...}]}}
+
   ## Returns
   - `{:ok, awards}`: A map of awards grouped by award name.
   - `{:error, reason}`: An error tuple with the reason for failure.
   """
-  @spec get(keyword(), keyword()) :: {:ok, map()} | {:error, any()}
-  def get(params, opts \\ [])
+  def get(params \\ @default, opts \\ []) do
+    with :ok <- NBA.Utils.validate_input(params, opts, @accepted_types, @required) do
+      player_id = NBA.Utils.integer_id(Keyword.get(params, :PlayerID))
 
-  def get(params, opts) do
-    with :ok <- validate_input(params, opts) do
-      # PlayerAwards expects PlayerID to be an integer
-      player_id = Util.integer_id(Keyword.get(params, :PlayerID))
-      params = Keyword.put(params, :PlayerID, player_id)
+      params =
+        Keyword.merge(@default, params)
+        |> Keyword.put_new(:PlayerID, player_id)
 
       case NBA.API.Stats.get(@endpoint, params, opts) do
         {:ok, %{data: %{"PlayerAwards" => awards}}} ->
@@ -66,52 +82,11 @@ defmodule NBA.Stats.PlayerAwards do
           end)
           |> then(&{:ok, &1})
 
-        {:error, %Jason.DecodeError{}} ->
-          {:error, :decode_error}
-
-        {:error, _} = err ->
-          err
-
         other ->
-          {:error, {:unexpected, other}}
+          NBA.Utils.handle_api_error(other)
       end
     else
-      {:error, :invalid_params} ->
-        {:error, "Invalid parameters: must be a keyword list"}
-
-      {:error, :invalid_opts} ->
-        {:error, "Invalid options: must be a keyword list"}
-
-      {:error, :missing_player_id} ->
-        {:error, "Missing required parameter: PlayerID"}
-
-      {:error, :invalid_player_id} ->
-        {:error, "Invalid PlayerID: must be an integer or numeric string"}
-
-      {:error, _} = err ->
-        err
-
-      other ->
-        {:error, {:unexpected, other}}
-    end
-  end
-
-  defp validate_input(params, opts) do
-    cond do
-      not is_list(params) ->
-        {:error, :invalid_params}
-
-      not is_list(opts) ->
-        {:error, :invalid_opts}
-
-      not Keyword.has_key?(params, :PlayerID) ->
-        {:error, :missing_player_id}
-
-      not Util.valid_id?(Keyword.get(params, :PlayerID)) ->
-        {:error, :invalid_player_id}
-
-      true ->
-        :ok
+      err -> NBA.Utils.handle_validation_error(err)
     end
   end
 end

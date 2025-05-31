@@ -23,4 +23,12 @@ defmodule NBA.Live.OddsTest do
     assert length(result) > 0
     assert Map.has_key?(hd(result), "gameId")
   end
+
+  @tag :integration
+  test "test bang function" do
+    assert result = Odds.get!()
+    assert is_list(result)
+    assert length(result) > 0
+    assert Map.has_key?(hd(result), "gameId")
+  end
 end

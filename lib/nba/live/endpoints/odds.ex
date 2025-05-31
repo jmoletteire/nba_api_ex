@@ -5,11 +5,15 @@ defmodule NBA.Live.Odds do
 
   @endpoint "odds/odds_todaysGames.json"
 
+  @accepted_types %{}
+  @default []
+
   @doc """
   Fetches live NBA odds data.
 
   ## Parameters
-    - `opts`: Optional parameters for the request (e.g., custom headers, proxy settings).
+    - `opts`: A keyword list of additional options for the request, such as headers or timeout settings.
+        - For a list of available options, see the [Req documentation](https://hexdocs.pm/req/Req.html#new/1).
 
   ## Example
       iex> NBA.Live.Odds.get()
@@ -19,20 +23,22 @@ defmodule NBA.Live.Odds do
     - `{:ok, odds}`: A map containing the odds data.
     - `{:error, reason}`: An error tuple with the reason for failure.
   """
-  @spec get(keyword()) :: {:ok, list()} | {:error, any()}
-  def get(opts \\ [])
-
-  def get(opts) when is_list(opts) do
-    NBA.API.Live.get(@endpoint, opts)
-    |> parse_response()
+  def get(opts \\ []) do
+    with :ok <- NBA.Utils.validate_input(@default, opts, @accepted_types) do
+      case NBA.API.Live.get(@endpoint, @default, opts) do
+        {:ok, %{data: data}} -> {:ok, data}
+        {:error, %Jason.DecodeError{}} -> {:ok, %{}}
+        other -> NBA.Utils.handle_api_error(other)
+      end
+    else
+      err -> NBA.Utils.handle_validation_error(err)
+    end
   end
 
-  def get(_opts) do
-    {:error, "Invalid options: must be a keyword list"}
+  def get!(opts \\ []) do
+    case get(opts) do
+      {:ok, result} -> result
+      {:error, reason} -> raise "Failed to fetch odds data: #{inspect(reason)}"
+    end
   end
-
-  defp parse_response({:ok, %{data: data}}), do: {:ok, data}
-  defp parse_response({:error, %Jason.DecodeError{}}), do: {:error, :decode_error}
-  defp parse_response({:error, _} = err), do: err
-  defp parse_response(other), do: {:error, {:unexpected, other}}
 end

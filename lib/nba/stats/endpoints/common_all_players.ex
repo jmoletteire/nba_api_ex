@@ -3,6 +3,9 @@ defmodule NBA.Stats.CommonAllPlayers do
   Fetches all players data from the NBA API.
   """
 
+  require NBA.Utils
+  NBA.Utils.def_get_bang(__MODULE__)
+
   @endpoint "commonallplayers"
 
   @accepted_types %{
@@ -56,27 +59,6 @@ defmodule NBA.Stats.CommonAllPlayers do
       end
     else
       err -> NBA.Utils.handle_validation_error(err)
-    end
-  end
-
-  @doc """
-  Same as `get/2`, but raises an exception on error and returns only the response on success.
-
-  ## Example
-
-      iex> NBA.Stats.CommonAllPlayers.get!()
-      [%{"DISPLAY_FIRST_LAST" => "LeBron James", ...}, ...]
-
-      iex> NBA.Stats.CommonAllPlayers.get!(LeagueID: "invalid")
-      ** (ArgumentError) Invalid parameters: ...
-  """
-  def get!(params \\ @default, opts \\ []) do
-    case get(params, opts) do
-      {:ok, result} ->
-        result
-
-      {:error, reason} ->
-        raise ArgumentError, "Failed to fetch CommonAllPlayers: #{inspect(reason)}"
     end
   end
 end

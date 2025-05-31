@@ -18,23 +18,48 @@ defmodule NBA.Live.PBPTest do
 
   @tag :integration
   test "#1) fetches play-by-play data for a known game" do
-    # Known game ID
-    game_id = "0042400311"
-    assert {:ok, result} = PBP.get(game_id)
+    assert {:ok, result} = PBP.get(GameID: "0042400311")
+    assert is_map(result)
+    assert Map.has_key?(result, "gameId")
+  end
+
+  @tag :integration
+  test "test bang function" do
+    assert result = PBP.get!(GameID: "0042400311")
     assert is_map(result)
     assert Map.has_key?(result, "gameId")
   end
 
   @tag :integration
   test "#2) returns empty for unknown (or upcoming) game ID" do
-    invalid_id = "99_999_999"
-    assert {:ok, result} = PBP.get(invalid_id)
+    assert {:ok, result} = PBP.get(GameID: "99_999_999")
     assert result == %{} or result == nil or map_size(result) == 0
   end
 
   @tag :unit
   test "#3) handles invalid input type gracefully" do
-    assert {:error, "Invalid game_id: must be a string or numeric string"} =
+    assert {:error, "Parameters and Options must be keyword lists or nil"} =
              PBP.get(true)
+  end
+
+  @tag :unit
+  test "#4) handles missing GameID parameter" do
+    assert {:error, "Parameters and Options must be keyword lists or nil"} = PBP.get(%{})
+  end
+
+  @tag :unit
+  test "#5) handles empty GameID parameter" do
+    assert {:ok, %{}} = PBP.get(GameID: "")
+  end
+
+  @tag :unit
+  test "#6) handles nil GameID parameter" do
+    assert {:error, "Missing required parameter(s): :GameID"} = PBP.get(GameID: nil)
+  end
+
+  @tag :unit
+  test "#7) handles invalid GameID format" do
+    assert {:error, "Invalid type for GameID: got 123, accepts string"} =
+             PBP.get(GameID: 123)
   end
 end

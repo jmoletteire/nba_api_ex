@@ -26,6 +26,13 @@ defmodule NBA.Stats.BoxScoreTest do
   end
 
   @tag :integration
+  test "test bang function" do
+    assert result = BoxScore.get!(:traditional, GameID: @game_id)
+    assert is_map(result)
+    assert Map.has_key?(result, "gameId")
+  end
+
+  @tag :integration
   test "#2) returns 400 error for unknown game ID" do
     assert {:error, "Bad request (400). Check your query parameters."} =
              BoxScore.get(:traditional, GameID: "99_999_999")
@@ -129,8 +136,7 @@ defmodule NBA.Stats.BoxScoreTest do
 
   @tag :integration
   test "#15) rejects unknown box score type" do
-    assert {:error,
-            "Invalid box score type :invalid — valid types are usage, traditional, advanced, misc, scoring, fourfactors, hustle, defense, matchups, summary"} =
+    assert {:error, "Box score type :invalid is not supported."} =
              BoxScore.get(:invalid, GameID: @game_id)
   end
 

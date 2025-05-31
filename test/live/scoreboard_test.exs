@@ -21,4 +21,12 @@ defmodule NBA.Live.Scoreboard_Test do
     assert length(result) > 0
     assert Map.has_key?(hd(result), "gameId")
   end
+
+  @tag :integration
+  test "test bang function" do
+    assert result = Scoreboard.get!()
+    assert is_list(result)
+    assert length(result) > 0
+    assert Map.has_key?(hd(result), "gameId")
+  end
 end
