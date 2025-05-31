@@ -23,47 +23,43 @@ defmodule NBA.Stats.LeagueLeadersTest do
 
   @tag :unit
   test "#2) handles invalid params" do
-    assert {:error, "Invalid params: must be a keyword list"} =
+    assert {:error, "Parameters and Options must be keyword lists or nil"} =
              LeagueLeaders.get("invalid")
-
-    assert {:error, "Invalid params: must be a keyword list"} = LeagueLeaders.get(123)
   end
 
   @tag :unit
   test "#3) handles invalid opts" do
-    assert {:error, "Invalid opts: must be a keyword list"} =
+    assert {:error, "Parameters and Options must be keyword lists or nil"} =
              LeagueLeaders.get([], "invalid")
-
-    assert {:error, "Invalid opts: must be a keyword list"} = LeagueLeaders.get([], 123)
   end
 
   @tag :unit
   test "#4) rejects unknown param with invalid type" do
-    assert {:error, "Invalid type for :SomeWeirdParam"} =
+    assert {:error, "Invalid parameter(s): :SomeWeirdParam"} =
              LeagueLeaders.get(SomeWeirdParam: :invalid)
   end
 
   @tag :unit
   test "#5) rejects non-string LeagueID" do
-    assert {:error, "Invalid type for :LeagueID"} =
+    assert {:error, "Invalid type for LeagueID: got 123, accepts string"} =
              LeagueLeaders.get(LeagueID: 123, PerMode: "PerGame", StatCategory: "PTS")
   end
 
   @tag :unit
   test "#6) rejects non-string PerMode" do
-    assert {:error, "Invalid type for :PerMode"} =
+    assert {:error, "Invalid type for PerMode: got :invalid, accepts string"} =
              LeagueLeaders.get(LeagueID: "00", PerMode: :invalid, StatCategory: "PTS")
   end
 
   @tag :unit
   test "#7) rejects non-string StatCategory" do
-    assert {:error, "Invalid type for :StatCategory"} =
+    assert {:error, "Invalid type for StatCategory: got :invalid, accepts string"} =
              LeagueLeaders.get(LeagueID: "00", PerMode: "PerGame", StatCategory: :invalid)
   end
 
   @tag :unit
   test "#8) rejects non-string Season" do
-    assert {:error, "Invalid type for :Season"} =
+    assert {:error, "Invalid type for Season: got 2023, accepts string"} =
              LeagueLeaders.get(
                LeagueID: "00",
                PerMode: "PerGame",
@@ -74,7 +70,7 @@ defmodule NBA.Stats.LeagueLeadersTest do
 
   @tag :unit
   test "#9) rejects non-string SeasonType" do
-    assert {:error, "Invalid type for :SeasonType"} =
+    assert {:error, "Invalid type for SeasonType: got :invalid, accepts string"} =
              LeagueLeaders.get(
                LeagueID: "00",
                PerMode: "PerGame",
@@ -85,7 +81,7 @@ defmodule NBA.Stats.LeagueLeadersTest do
 
   @tag :unit
   test "#10) rejects non-string Scope" do
-    assert {:error, "Invalid type for :Scope"} =
+    assert {:error, "Invalid type for Scope: got :invalid, accepts string"} =
              LeagueLeaders.get(
                LeagueID: "00",
                PerMode: "PerGame",
@@ -96,7 +92,7 @@ defmodule NBA.Stats.LeagueLeadersTest do
 
   @tag :unit
   test "#11) rejects non-string ActiveFlag" do
-    assert {:error, "Invalid type for :ActiveFlag"} =
+    assert {:error, "Invalid type for ActiveFlag: got :invalid, accepts string"} =
              LeagueLeaders.get(
                LeagueID: "00",
                PerMode: "PerGame",

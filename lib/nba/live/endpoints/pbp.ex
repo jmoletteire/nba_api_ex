@@ -24,7 +24,7 @@ defmodule NBA.Live.PBP do
 
   def get(game_id, opts) when is_binary(game_id) do
     NBA.API.Live.get(@endpoint <> game_id <> ".json", [], opts)
-    |> parse_pbp()
+    |> parse_response()
   end
 
   def get(game_id, _opts) when is_integer(game_id) do
@@ -35,14 +35,16 @@ defmodule NBA.Live.PBP do
     {:error, "Invalid game_id: must be a string or numeric string"}
   end
 
-  defp parse_pbp({:ok, %{data: data}}), do: {:ok, data}
-  defp parse_pbp({:error, %Jason.DecodeError{}}), do: {:error, :decode_error}
+  defp parse_response({:ok, %{data: data}}), do: {:ok, data}
+  defp parse_response({:error, %Jason.DecodeError{}}), do: {:error, :decode_error}
 
   # Nonexistent game IDs return 403 Forbidden
   # In this case, we return an empty map
-  defp parse_pbp({:error, "Forbidden (403). You may be blocked or missing required headers."}),
-    do: {:ok, %{}}
+  defp parse_response(
+         {:error, "Forbidden (403). You may be blocked or missing required headers."}
+       ),
+       do: {:ok, %{}}
 
-  defp parse_pbp({:error, _} = err), do: err
-  defp parse_pbp(other), do: {:error, {:unexpected, other}}
+  defp parse_response({:error, _} = err), do: err
+  defp parse_response(other), do: {:error, {:unexpected, other}}
 end

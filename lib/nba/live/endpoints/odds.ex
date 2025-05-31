@@ -24,15 +24,15 @@ defmodule NBA.Live.Odds do
 
   def get(opts) when is_list(opts) do
     NBA.API.Live.get(@endpoint, opts)
-    |> parse_odds()
+    |> parse_response()
   end
 
   def get(_opts) do
     {:error, "Invalid options: must be a keyword list"}
   end
 
-  defp parse_odds({:ok, %{data: data}}), do: {:ok, data}
-  defp parse_odds({:error, %Jason.DecodeError{}}), do: {:error, :decode_error}
-  defp parse_odds({:error, _} = err), do: err
-  defp parse_odds(other), do: {:error, {:unexpected, other}}
+  defp parse_response({:ok, %{data: data}}), do: {:ok, data}
+  defp parse_response({:error, %Jason.DecodeError{}}), do: {:error, :decode_error}
+  defp parse_response({:error, _} = err), do: err
+  defp parse_response(other), do: {:error, {:unexpected, other}}
 end

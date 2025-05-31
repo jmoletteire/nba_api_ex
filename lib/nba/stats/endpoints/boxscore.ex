@@ -26,7 +26,17 @@ defmodule NBA.Stats.BoxScore do
     hustle: "boxScoreHustle",
     defense: "boxScoreDefensive",
     matchups: "boxScoreMatchups",
-    summary: "GameSummary"
+    summary: " "
+  }
+
+  @accepted_types %{
+    GameID: [:string],
+    LeagueID: [:string],
+    endPeriod: [:integer],
+    endRange: [:integer],
+    rangeType: [:integer],
+    startPeriod: [:integer],
+    startRange: [:integer]
   }
 
   @default [
@@ -37,6 +47,8 @@ defmodule NBA.Stats.BoxScore do
     startPeriod: 0,
     startRange: 0
   ]
+
+  @required [:GameID]
 
   @doc """
   Fetches advanced box score data for a specific game.
@@ -53,77 +65,69 @@ defmodule NBA.Stats.BoxScore do
       - `defense`: Fetches defensive box score data.
       - `matchups`: Fetches matchups box score data.
     - `params`: A keyword list of parameters for the request.
-    - `opts`: Optional parameters for the request (e.g., custom headers, proxy settings).
+      - `GameID`: **(Required)** The unique identifier for the game.
+        - _Type(s)_: Numeric `String`.
+        - _Example_: `GameID: "0022200001"` (for a specific game).
+      - `LeagueID`: The league ID.
+        - _Type(s)_: Numeric `String`.
+        - _Default_: `"00"` (NBA).
+        - _Example_: `LeagueID: "10"` (for WNBA).
+        - _Valueset_:
+          - `"00"` (NBA)
+          - `"01"` (ABA)
+          - `"10"` (WNBA)
+          - `"20"` (G-League)
+      - `endPeriod`: The end period for the box score data.
+        - _Type(s)_: `Integer`.
+        - _Default_: `0` (all periods).
+        - _Example_: `endPeriod: 4`.
+      - `endRange`: The end range for the box score data in seconds.
+        - _Type(s)_: `Integer`.
+        - _Default_: `31800` (full game).
+        - _Example_: `endRange: 3600` (for the first hour).
+      - `rangeType`: The type of range for the box score data.
+        - _Type(s)_: `Integer`.
+        - _Default_: `0` (full game).
+        - _Example_: `rangeType: 1` (for first half).
+      - `startPeriod`: The start period for the box score data.
+        - _Type(s)_: `Integer`.
+        - _Default_: `0` (all periods).
+        - _Example_: `startPeriod: 1`.
+      - `startRange`: The start range for the box score data in seconds.
+        - _Type(s)_: `Integer`.
+        - _Default_: `0` (start of game).
+        - _Example_: `startRange: 1800` (for the first 30 minutes).
+      - `opts`: A keyword list of additional options for the request, such as headers or timeout settings.
+        - For a list of available options, see the [Req documentation](https://hexdocs.pm/req/Req.html#new/1).
 
   ## Example
-      iex> NBA.API.BoxScore.get("traditional", "0022200001")
+      iex> NBA.API.BoxScore.get(:traditional, GameID: "0022200001")
       {:ok, [%{"gameId" => "0022200001", ...}, ...]}
 
   ## Returns
     - `{:ok, box_score}`: A map containing the box score data.
     - `{:error, reason}`: An error tuple with the reason for failure.
   """
-  @spec get(atom(), keyword(), keyword()) :: {:ok, map()} | {:error, any()}
+  @spec get(atom(), keyword(), keyword()) :: {:ok, map()} | {:error, String.t()}
   def get(type, params \\ @default, opts \\ [])
 
-  def get(type, params, opts) when is_atom(type) and is_list(params) and is_list(opts) do
-    with :ok <- validate_params(params),
-         final_params <- Keyword.merge(@default, params),
+  def get(type, params, opts) when is_atom(type) do
+    with :ok <- NBA.Utils.validate_input(params, opts, @accepted_types, @required),
          endpoint when not is_nil(endpoint) <- Map.get(@endpoints, type),
          data_key when not is_nil(data_key) <- Map.get(@keys, type) do
-      NBA.API.Stats.get(endpoint, final_params, opts)
-      |> get_parser(type, data_key)
+      params = Keyword.merge(@default, params)
+
+      case NBA.API.Stats.get(endpoint, params, opts) do
+        {:ok, %{data: data}} when type == :summary -> {:ok, data}
+        {:ok, %{data: data}} -> {:ok, Map.get(data, data_key, %{})}
+        other -> NBA.Utils.handle_api_error(other)
+      end
     else
-      nil ->
-        {:error,
-         "Invalid box score type :#{type} — valid types are #{Enum.join(Map.keys(@endpoints), ", ")}"}
-
-      {:error, reason} ->
-        {:error, reason}
-
-      :error ->
-        {:error, "Missing required parameter :GameID"}
+      err -> NBA.Utils.handle_validation_error(err)
     end
   end
 
-  def get(type, _params, _opts) when not is_atom(type) do
-    {:error, "Invalid box score type: must be an atom"}
+  def get(type, _params, _opts) do
+    {:error, "Received Box Score type #{inspect(type)}, expected atom :#{type}"}
   end
-
-  def get(_type, params, _opts) when not is_list(params) do
-    {:error, "Invalid parameters: must be a keyword list"}
-  end
-
-  def get(_type, _params, opts) when not is_list(opts) do
-    {:error, "Invalid options: must be a keyword list"}
-  end
-
-  def get(_type, _params, _opts) do
-    {:error, "Invalid args: check your input and try again"}
-  end
-
-  defp validate_params(params) do
-    if Keyword.has_key?(params, :GameID) do
-      Enum.reduce_while(params, :ok, fn
-        {:GameID, val}, :ok when is_binary(val) -> {:cont, :ok}
-        {:LeagueID, val}, :ok when is_binary(val) -> {:cont, :ok}
-        {:endPeriod, val}, :ok when is_integer(val) -> {:cont, :ok}
-        {:endRange, val}, :ok when is_integer(val) -> {:cont, :ok}
-        {:rangeType, val}, :ok when is_integer(val) -> {:cont, :ok}
-        {:startPeriod, val}, :ok when is_integer(val) -> {:cont, :ok}
-        {:startRange, val}, :ok when is_integer(val) -> {:cont, :ok}
-        {key, _val}, _ -> {:halt, {:error, "Invalid type for #{inspect(key)}"}}
-      end)
-    else
-      {:error, "Missing required parameter :GameID"}
-    end
-  end
-
-  defp get_parser({:ok, %{data: data}} = _result, :summary, _key), do: {:ok, data}
-  defp get_parser(result, _type, key), do: parse_box_score(result, key)
-
-  defp parse_box_score({:ok, %{data: data}}, type), do: {:ok, Map.get(data, type, {})}
-  defp parse_box_score({:error, %Jason.DecodeError{}}, _type), do: {:error, :decode_error}
-  defp parse_box_score({:error, _} = err, _type), do: err
-  defp parse_box_score(other, _type), do: {:error, {:unexpected, other}}
 end

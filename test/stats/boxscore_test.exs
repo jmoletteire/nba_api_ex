@@ -33,19 +33,19 @@ defmodule NBA.Stats.BoxScoreTest do
 
   @tag :integration
   test "#3) invalid parameters: not keyword list" do
-    assert {:error, "Invalid parameters: must be a keyword list"} =
+    assert {:error, "Parameters and Options must be keyword lists or nil"} =
              BoxScore.get(:traditional, "invalid", [])
   end
 
   @tag :integration
   test "#4) invalid options: not keyword list" do
-    assert {:error, "Invalid options: must be a keyword list"} =
+    assert {:error, "Parameters and Options must be keyword lists or nil"} =
              BoxScore.get(:traditional, [GameID: @game_id], "invalid")
   end
 
   @tag :integration
   test "#5) no game id" do
-    assert {:error, "Missing required parameter :GameID"} =
+    assert {:error, "Missing required parameter(s): :GameID"} =
              BoxScore.get(
                :traditional,
                LeagueID: "00",
@@ -136,49 +136,49 @@ defmodule NBA.Stats.BoxScoreTest do
 
   @tag :unit
   test "#16) rejects unknown param with invalid type" do
-    assert {:error, "Invalid type for :SomeWeirdParam"} =
+    assert {:error, "Invalid parameter(s): :SomeWeirdParam"} =
              BoxScore.get(:traditional, GameID: @game_id, SomeWeirdParam: :invalid)
   end
 
   @tag :unit
   test "#17) rejects non-string GameID" do
-    assert {:error, "Invalid type for :GameID"} =
+    assert {:error, "Invalid type for GameID: got 123, accepts string"} =
              BoxScore.get(:traditional, GameID: 123)
   end
 
   @tag :unit
   test "#18) rejects non-string LeagueID" do
-    assert {:error, "Invalid type for :LeagueID"} =
+    assert {:error, "Invalid type for LeagueID: got 123, accepts string"} =
              BoxScore.get(:traditional, GameID: @game_id, LeagueID: 123)
   end
 
   @tag :unit
   test "#19) rejects non-integer endPeriod" do
-    assert {:error, "Invalid type for :endPeriod"} =
+    assert {:error, "Invalid type for endPeriod: got \"last\", accepts integer"} =
              BoxScore.get(:traditional, GameID: @game_id, endPeriod: "last")
   end
 
   @tag :unit
   test "#20) rejects non-integer endRange" do
-    assert {:error, "Invalid type for :endRange"} =
+    assert {:error, "Invalid type for endRange: got \"infinity\", accepts integer"} =
              BoxScore.get(:traditional, GameID: @game_id, endRange: "infinity")
   end
 
   @tag :unit
   test "#21) rejects non-integer rangeType" do
-    assert {:error, "Invalid type for :rangeType"} =
+    assert {:error, "Invalid type for rangeType: got \"all\", accepts integer"} =
              BoxScore.get(:traditional, GameID: @game_id, rangeType: "all")
   end
 
   @tag :unit
   test "#22) rejects non-integer startPeriod" do
-    assert {:error, "Invalid type for :startPeriod"} =
+    assert {:error, "Invalid type for startPeriod: got \"first\", accepts integer"} =
              BoxScore.get(:traditional, GameID: @game_id, startPeriod: "first")
   end
 
   @tag :unit
   test "#23) rejects non-integer startRange" do
-    assert {:error, "Invalid type for :startRange"} =
+    assert {:error, "Invalid type for startRange: got \"zero\", accepts integer"} =
              BoxScore.get(:traditional, GameID: @game_id, startRange: "zero")
   end
 
@@ -187,6 +187,21 @@ defmodule NBA.Stats.BoxScoreTest do
     assert {:ok, _result} =
              BoxScore.get(
                :traditional,
+               GameID: @game_id,
+               LeagueID: "00",
+               startPeriod: 1,
+               endPeriod: 4,
+               startRange: 0,
+               endRange: 28800,
+               rangeType: 0
+             )
+  end
+
+  @tag :unit
+  test "#25) error invalid boxscore type" do
+    assert {:error, "Received Box Score type \"traditional\", expected atom :traditional"} =
+             BoxScore.get(
+               "traditional",
                GameID: @game_id,
                LeagueID: "00",
                startPeriod: 1,

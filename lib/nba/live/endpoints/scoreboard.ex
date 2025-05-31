@@ -24,15 +24,15 @@ defmodule NBA.Live.Scoreboard do
 
   def get(opts) when is_list(opts) do
     NBA.API.Live.get(@endpoint, opts)
-    |> parse_scoreboard()
+    |> parse_response()
   end
 
   def get(_opts) do
     {:error, "Invalid options: must be a keyword list"}
   end
 
-  defp parse_scoreboard({:ok, %{data: data}}), do: {:ok, Map.get(data, "games", [])}
-  defp parse_scoreboard({:error, %Jason.DecodeError{}}), do: {:error, :decode_error}
-  defp parse_scoreboard({:error, _} = err), do: err
-  defp parse_scoreboard(other), do: {:error, {:unexpected, other}}
+  defp parse_response({:ok, %{data: data}}), do: {:ok, Map.get(data, "games", [])}
+  defp parse_response({:error, %Jason.DecodeError{}}), do: {:error, :decode_error}
+  defp parse_response({:error, _} = err), do: err
+  defp parse_response(other), do: {:error, {:unexpected, other}}
 end
