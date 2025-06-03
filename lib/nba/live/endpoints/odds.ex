@@ -15,13 +15,13 @@ defmodule NBA.Live.Odds do
     - `opts`: A keyword list of additional options for the request, such as headers or timeout settings.
         - For a list of available options, see the [Req documentation](https://hexdocs.pm/req/Req.html#new/1).
 
-  ## Example
-      iex> NBA.Live.Odds.get()
-      {:ok, [%{"gameId" => "0042400311", ...}, ...]}
-
   ## Returns
     - `{:ok, odds}`: A map containing the odds data.
     - `{:error, reason}`: An error tuple with the reason for failure.
+
+  ## Example
+      iex> NBA.Live.Odds.get()
+      {:ok, [%{"gameId" => "0042400311", ...}, ...]}
   """
   def get(opts \\ []) do
     with :ok <- NBA.Utils.validate_input(@default, opts, @accepted_types) do

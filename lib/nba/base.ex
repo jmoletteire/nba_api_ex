@@ -81,7 +81,6 @@ defmodule NBA.API.Base do
           |> Enum.map(&Enum.zip(headers, &1))
           |> Enum.map(&Enum.into(&1, %{}))
 
-        IO.inspect(formatted, label: "Formatted Data")
         {:ok, %{status: status, data: formatted}}
 
       {:ok,

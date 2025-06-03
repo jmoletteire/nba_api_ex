@@ -33,10 +33,10 @@ defmodule NBA.Stats.CommonPlayerInfo do
   ## Parameters
   - `params`: A keyword list of parameters to filter the player information.
     - `PlayerID`: **(Required)** The unique identifier for the player.
-      - _Type(s)_: `Integer`, Numeric `String`.
+      - _Type(s)_: `Integer`, `String`
       - _Example_: `PlayerID: 2544` or `PlayerID: "2544"` (for LeBron James).
     - `LeagueID`: The league ID.
-      - _Type(s)_: Numeric `String`.
+      - _Type(s)_: Numeric `String`
       - _Default_: `"00"` (NBA).
       - _Example_: `LeagueID: "10"` (for WNBA).
       - _Valueset_:
@@ -56,9 +56,8 @@ defmodule NBA.Stats.CommonPlayerInfo do
       {:ok, %{"name" => "LeBron James", ...}}
   """
   def get(params \\ @default, opts \\ []) do
-    with :ok <- NBA.Utils.validate_input(params, opts, @accepted_types, @required) do
-      player_id = NBA.Utils.integer_id(Keyword.get(params, :PlayerID))
-
+    with :ok <- NBA.Utils.validate_input(params, opts, @accepted_types, @required),
+         player_id <- NBA.Utils.integer_id(Keyword.get(params, :PlayerID)) do
       params =
         Keyword.merge(@default, params)
         |> Keyword.put_new(:PlayerID, player_id)

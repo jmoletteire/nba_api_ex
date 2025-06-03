@@ -45,14 +45,17 @@ defmodule NBA.Stats.CommonAllPlayers do
     - `opts`: A keyword list of additional options for the request, such as headers or timeout settings.
       - For a list of available options, see the [Req documentation](https://hexdocs.pm/req/Req.html#new/1).
 
+  ## Returns
+  - `{:ok, response}`: A tuple containing the status and parsed response body.
+  - `{:error, reason}`: An error tuple with the reason for failure.
+
   ## Example
       iex> NBA.Stats.CommonAllPlayers.get()
       {:ok, [%{"DISPLAY_FIRST_LAST" => "LeBron James", ...}, ...]}
   """
   def get(params \\ @default, opts \\ []) do
-    with :ok <- NBA.Utils.validate_input(params, opts, @accepted_types) do
-      params = Keyword.merge(@default, params)
-
+    with :ok <- NBA.Utils.validate_input(params, opts, @accepted_types),
+         params <- Keyword.merge(@default, params) do
       case NBA.API.Stats.get(@endpoint, params, opts) do
         {:ok, %{data: data}} -> {:ok, Map.get(data, "CommonAllPlayers", [])}
         other -> NBA.Utils.handle_api_error(other)

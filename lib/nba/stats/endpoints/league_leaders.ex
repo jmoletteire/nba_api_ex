@@ -113,10 +113,6 @@ defmodule NBA.Stats.LeagueLeaders do
   - `opts`: A keyword list of additional options for the request, such as headers or timeout settings.
     - For a list of available options, see the [Req documentation](https://hexdocs.pm/req/Req.html#new/1).
 
-  ## Example
-      iex> NBA.Stats.LeagueLeaders.get()
-      {:ok, [%{"PLAYER_ID" => 2544, ...}, ...]}
-
   ## Returns
   - `{:ok, leaders}`: A map of all-time leaders data.
   - `{:error, reason}`: An error tuple with the reason for failure.
@@ -124,11 +120,14 @@ defmodule NBA.Stats.LeagueLeaders do
   ## Notes
   - Data availability depends on the league, season type, stat category, and other parameters. Some combinations may return no data.
   - For All-Time Leaders, the `Season` parameter can be set to "All Time".
+
+  ## Example
+      iex> NBA.Stats.LeagueLeaders.get()
+      {:ok, [%{"PLAYER_ID" => 2544, ...}, ...]}
   """
   def get(params \\ @default, opts \\ []) do
-    with :ok <- NBA.Utils.validate_input(params, opts, @accepted_types) do
-      params = Keyword.merge(@default, params)
-
+    with :ok <- NBA.Utils.validate_input(params, opts, @accepted_types),
+         params <- Keyword.merge(@default, params) do
       case NBA.API.Stats.get(@endpoint, params, opts) do
         {:ok, %{data: data}} -> {:ok, data}
         other -> NBA.Utils.handle_api_error(other)

@@ -53,24 +53,23 @@ defmodule NBA.Stats.PlayerAwards do
 
   ## Parameters
   - `params`: A keyword list of parameters for the request.
-    - `PlayerID`: The ID of the player to fetch awards for.
+    - `PlayerID`: **(Required)** The ID of the player to fetch awards for.
       - _Type(s)_: `Integer`, Numeric `String`.
       - _Example_: `PlayerID: 2544` (for LeBron James).
   - `opts`: A keyword list of options for the request, such as headers or timeout settings.
     - For a list of available options, see the [Req documentation](https://hexdocs.pm/req/Req.html#new/1).
 
-  ## Example
-      iex> NBA.Stats.PlayerAwards.get(PlayerID: "2544")
-      {:ok, %{"All-NBA" => [%{"DESCRIPTION" => "All-NBA", ...}]}}
-
   ## Returns
   - `{:ok, awards}`: A map of awards grouped by award name.
   - `{:error, reason}`: An error tuple with the reason for failure.
+
+  ## Example
+      iex> NBA.Stats.PlayerAwards.get(PlayerID: "2544")
+      {:ok, %{"All-NBA" => [%{"DESCRIPTION" => "All-NBA", ...}]}}
   """
   def get(params \\ @default, opts \\ []) do
-    with :ok <- NBA.Utils.validate_input(params, opts, @accepted_types, @required) do
-      player_id = NBA.Utils.integer_id(Keyword.get(params, :PlayerID))
-
+    with :ok <- NBA.Utils.validate_input(params, opts, @accepted_types, @required),
+         player_id <- NBA.Utils.integer_id(Keyword.get(params, :PlayerID)) do
       params =
         Keyword.merge(@default, params)
         |> Keyword.put_new(:PlayerID, player_id)

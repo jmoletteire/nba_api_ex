@@ -114,9 +114,8 @@ defmodule NBA.Stats.BoxScore do
   def get(type, params, opts) when is_atom(type) do
     with :ok <- NBA.Utils.validate_input(params, opts, @accepted_types, @required),
          endpoint when not is_nil(endpoint) <- Map.get(@endpoints, type),
-         data_key when not is_nil(data_key) <- Map.get(@keys, type) do
-      params = Keyword.merge(@default, params)
-
+         data_key when not is_nil(data_key) <- Map.get(@keys, type),
+         params <- Keyword.merge(@default, params) do
       case NBA.API.Stats.get(endpoint, params, opts) do
         {:ok, %{data: data}} when type == :summary -> {:ok, data}
         {:ok, %{data: data}} -> {:ok, Map.get(data, data_key, %{})}
