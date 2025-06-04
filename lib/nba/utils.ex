@@ -104,7 +104,6 @@ defmodule NBA.Utils do
   @doc """
   Handles common API response errors.
   """
-  def handle_api_error({:error, %Jason.DecodeError{}}), do: {:error, :decode_error}
   def handle_api_error({:error, _} = err), do: err
   def handle_api_error(other), do: {:error, {:unexpected, other}}
 

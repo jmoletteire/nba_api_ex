@@ -96,13 +96,12 @@ defmodule NBA.Stats.LeagueLeaders do
         - `"Playoffs"` (Playoff stats)
     - `Scope`: The scope of the data (e.g., "All", "Home", "Away").
       - _Type(s)_: `String`
-      - _Default_: `"S"` (Season)
-      - _Example_: `Scope: "A"` (All games)
+      - _Default_: `"S"` (for all players)
+      - _Example_: `Scope: "Rookies"`
       - _Valueset_:
-        - `"S"` (Season)
-        - `"A"` (All games)
-        - `"H"` (Home games)
-        - `"R"` (Road games)
+        - `"S"` (all players)
+        - `"Rookies"`
+        - `"RS"`
     - `ActiveFlag`: A flag to indicate if only active players should be included.
       - _Type(s)_: `String`
       - _Default_: `"No"` (include all players)

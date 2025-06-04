@@ -15,10 +15,11 @@ defmodule NBA.Stats.LeagueLeadersTest do
   """
   @tag :integration
   test "#1) fetches all-time leaders data" do
-    assert {:ok, result} = LeagueLeaders.get()
+    assert {:ok, result} = LeagueLeaders.get(Scope: "RS", Season: "2024-25")
     assert is_list(result)
     assert length(result) > 0
     assert Map.has_key?(hd(result), "PLAYER_ID")
+    IO.inspect(hd(result), limit: :infinity, label: "League Leaders Data")
   end
 
   @tag :integration
