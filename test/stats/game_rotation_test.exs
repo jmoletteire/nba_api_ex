@@ -14,7 +14,7 @@ defmodule NBA.Stats.GameRotationTest do
     end
 
     test "returns error for missing required parameters" do
-      assert {:error, "Missing required parameter(s): :GameID"} = GameRotation.get([])
+      assert {:error, "Missing required parameter(s): :GameID"} = GameRotation.get()
     end
 
     test "returns error for invalid TeamID type" do
