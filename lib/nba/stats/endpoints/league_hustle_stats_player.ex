@@ -116,7 +116,7 @@ defmodule NBA.Stats.LeagueHustleStatsPlayer do
       - _Default_: `nil`
 
     - `TeamID`: Team ID filter.
-      - _Type(s)_: `Integer` or `String`
+      - _Type(s)_: `Integer` | `String`
       - _Example_: `TeamID: 1610612747`
       - _Default_: `nil`
 
@@ -146,7 +146,7 @@ defmodule NBA.Stats.LeagueHustleStatsPlayer do
       - _Default_: `nil`
 
     - `OpponentTeamID`: Opponent team ID filter.
-      - _Type(s)_: `Integer` or `String`
+      - _Type(s)_: `Integer` | `String`
       - _Example_: `OpponentTeamID: 1610612747`
       - _Default_: `nil`
 

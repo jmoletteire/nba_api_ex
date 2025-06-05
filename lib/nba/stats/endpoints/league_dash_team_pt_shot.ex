@@ -133,7 +133,7 @@ defmodule NBA.Stats.LeagueDashTeamPtShot do
         - "Touch 6+ Seconds"
 
     - `TeamID`: The NBA team ID (use `0` for league-wide).
-      - _Type(s)_: `Integer` or `String`
+      - _Type(s)_: `Integer` | `String`
       - _Example_: `TeamID: 1610612747`
       - _Default_: `0`
 
@@ -186,7 +186,7 @@ defmodule NBA.Stats.LeagueDashTeamPtShot do
         - "L"
 
     - `OpponentTeamID`: The ID of the opponent team.
-      - _Type(s)_: `Integer` or `String`
+      - _Type(s)_: `Integer` | `String`
       - _Example_: `OpponentTeamID: 1610612739`
       - _Default_: `0`
 

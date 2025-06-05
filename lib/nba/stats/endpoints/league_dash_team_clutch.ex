@@ -190,12 +190,12 @@ defmodule NBA.Stats.LeagueDashTeamClutch do
       - _Default_: `0`
 
     - `OpponentTeamID`: The ID of the opponent team.
-      - _Type(s)_: `Integer` or `String`
+      - _Type(s)_: `Integer` | `String`
       - _Example_: `OpponentTeamID: 1610612739`
       - _Default_: `0`
 
     - `TeamID`: The ID of the team.
-      - _Type(s)_: `Integer` or `String`
+      - _Type(s)_: `Integer` | `String`
       - _Example_: `TeamID: 1610612747`
       - _Default_: `0`
 

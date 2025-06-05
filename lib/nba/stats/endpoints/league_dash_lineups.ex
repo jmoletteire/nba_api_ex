@@ -164,7 +164,7 @@ defmodule NBA.Stats.LeagueDashLineups do
       - _Default_: `0` (all months)
 
     - `OpponentTeamID`: The ID of the opponent team.
-      - _Type(s)_: `Integer` or `String`
+      - _Type(s)_: `Integer` | `String`
       - _Example_: `OpponentTeamID: 1610612739` (Golden State Warriors)
       - _Default_: `0` (all teams)
 
@@ -263,7 +263,7 @@ defmodule NBA.Stats.LeagueDashLineups do
         - `"24+"` (Shots taken with more than 24 seconds left)
 
     - `TeamID`: The ID of the team.
-      - _Type(s)_: `Integer` or `String`
+      - _Type(s)_: `Integer` | `String`
       - _Example_: `TeamID: 1610612756` (Los Angeles Lakers)
       - _Default_: `0` (all teams)
 

@@ -1,51 +1,37 @@
-defmodule NBA.Stats.LeagueSeasonMatchups do
+defmodule NBA.Stats.PlayerCareerByCollegeRollup do
   @moduledoc """
-  Provides functions to interact with the NBA stats API for league season matchup.
+  Provides functions to interact with the NBA stats API for PlayerCareerByCollegeRollup.
 
   See `get/2` for parameter and usage details.
   """
   require NBA.Utils
   NBA.Utils.def_get_bang(__MODULE__)
 
-  @endpoint "leagueseasonmatchups"
+  @endpoint "playercareerbycollegerollup"
 
   @accepted_types %{
-    DefPlayerID: [:integer, :string],
-    DefTeamID: [:integer, :string],
     LeagueID: [:string],
-    OffPlayerID: [:integer, :string],
-    OffTeamID: [:integer, :string],
     PerMode: [:string],
-    Season: [:string],
-    SeasonType: [:string]
+    SeasonType: [:string],
+    Season: [:string]
   }
 
   @default [
     LeagueID: "00",
-    PerMode: "PerGame",
-    Season: nil,
+    PerMode: "Totals",
     SeasonType: "Regular Season",
-    OffTeamID: nil,
-    OffPlayerID: nil,
-    DefTeamID: nil,
-    DefPlayerID: nil
+    Season: nil
   ]
 
-  @required [:Season]
+  @required []
 
   @doc """
-  Fetches league season matchups data.
+  Fetches PlayerCareerByCollegeRollup data.
 
   ## Parameters
   - `params`: A keyword list of parameters to filter the data.
 
-    - `Season`: **(Required)** The season for which to fetch data.
-      - _Type(s)_: `String`
-      - _Example_: `Season: "2024-25"`
-      - _Default_: `nil`
-      - _Pattern_: `^(\\d{4}-\\d{2})$`
-
-    - `LeagueID`: The league ID (e.g., "00" for NBA).
+    - `LeagueID`: The league ID.
       - _Type(s)_: `String`
       - _Example_: `LeagueID: "00"`
       - _Default_: `"00"`
@@ -55,10 +41,10 @@ defmodule NBA.Stats.LeagueSeasonMatchups do
         - `"10"` (WNBA)
         - `"20"` (G League)
 
-    - `PerMode`: How stats are aggregated.
+    - `PerMode`: How to aggregate stats.
       - _Type(s)_: `String`
-      - _Example_: `PerMode: "PerGame"`
-      - _Default_: `"PerGame"`
+      - _Example_: `PerMode: "Totals"`
+      - _Default_: `"Totals"`
       - _Valueset_:
         - `"Totals"`
         - `"PerGame"`
@@ -71,26 +57,11 @@ defmodule NBA.Stats.LeagueSeasonMatchups do
         - `"Regular Season"`
         - `"Pre Season"`
         - `"Playoffs"`
-        - `"Pre-Season"`
+        - `"All Star"`
 
-    - `OffTeamID`: Offensive team ID filter.
-      - _Type(s)_: `Integer` | `String`
-      - _Example_: `OffTeamID: 1610612747`
-      - _Default_: `nil`
-
-    - `OffPlayerID`: Offensive player ID filter.
-      - _Type(s)_: `Integer` | `String`
-      - _Example_: `OffPlayerID: 201939`
-      - _Default_: `nil`
-
-    - `DefTeamID`: Defensive team ID filter.
-      - _Type(s)_: `Integer` | `String`
-      - _Example_: `DefTeamID: 1610612747`
-      - _Default_: `nil`
-
-    - `DefPlayerID`: Defensive player ID filter.
-      - _Type(s)_: `Integer` | `String`
-      - _Example_: `DefPlayerID: 201939`
+    - `Season`: Specific season to fetch data for.
+      - _Type(s)_: `String`
+      - _Example_: `Season: "2024-25"`
       - _Default_: `nil`
 
   - `opts`: A keyword list of additional options for the request, such as headers or timeout settings.
@@ -101,8 +72,8 @@ defmodule NBA.Stats.LeagueSeasonMatchups do
   - `{:error, reason}`: On failure, returns an error tuple with the reason.
 
   ## Example
-      iex> NBA.Stats.LeagueSeasonMatchups.get(LeagueID: "00", PerMode: "PerGame", Season: "2024-25", SeasonType: "Regular Season")
-      {:ok, %{"LeagueSeasonMatchups" => [%{...}, ...]}}
+      iex> NBA.Stats.PlayerCareerByCollegeRollup.get(LeagueID: "00", PerMode: "Totals", SeasonType: "Regular Season")
+      {:ok, %{"PlayerCareerByCollegeRollup" => [%{...}, ...]}}
   """
   def get(params \\ @default, opts \\ []) do
     with :ok <- NBA.Utils.validate_input(params, opts, @accepted_types, @required),

@@ -33,7 +33,7 @@ defmodule NBA.Stats.CommonPlayerInfo do
   ## Parameters
   - `params`: A keyword list of parameters to filter the player information.
     - `PlayerID`: **(Required)** The unique identifier for the player.
-      - _Type(s)_: `Integer`, `String`
+      - _Type(s)_: `Integer` | `String`
       - _Example_: `PlayerID: 2544` or `PlayerID: "2544"` (for LeBron James).
     - `LeagueID`: The league ID.
       - _Type(s)_: Numeric `String`

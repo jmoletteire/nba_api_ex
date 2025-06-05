@@ -1,36 +1,40 @@
-defmodule NBA.Stats.LeaguePlayerOnDetails do
+defmodule NBA.Stats.PlayerCompare do
   @moduledoc """
-  Provides functions to interact with the NBA stats API for league player on details.
+  Provides functions to interact with the NBA stats API for PlayerCompare.
 
   See `get/2` for parameter and usage details.
   """
   require NBA.Utils
   NBA.Utils.def_get_bang(__MODULE__)
 
-  @endpoint "leagueplayerondetails"
+  @endpoint "playercompare"
 
   @accepted_types %{
-    DateFrom: [:string],
-    DateTo: [:string],
-    GameSegment: [:string],
     LastNGames: [:integer],
-    LeagueID: [:string],
-    Location: [:string],
     MeasureType: [:string],
     Month: [:integer],
     OpponentTeamID: [:integer, :string],
-    Outcome: [:string],
     PaceAdjust: [:string],
     PerMode: [:string],
     Period: [:integer],
+    PlayerIDList: [:string],
     PlusMinus: [:string],
     Rank: [:string],
     Season: [:string],
-    SeasonSegment: [:string],
     SeasonType: [:string],
-    TeamID: [:integer, :string],
+    VsPlayerIDList: [:string],
+    VsDivision: [:string],
     VsConference: [:string],
-    VsDivision: [:string]
+    ShotClockRange: [:string],
+    SeasonSegment: [:string],
+    Outcome: [:string],
+    Location: [:string],
+    LeagueID: [:string],
+    GameSegment: [:string],
+    Division: [:string],
+    DateTo: [:string],
+    DateFrom: [:string],
+    Conference: [:string]
   }
 
   @default [
@@ -41,46 +45,59 @@ defmodule NBA.Stats.LeaguePlayerOnDetails do
     PaceAdjust: "N",
     PerMode: "PerGame",
     Period: 0,
+    PlayerIDList: nil,
     PlusMinus: "N",
     Rank: "N",
     Season: nil,
     SeasonType: "Regular Season",
-    TeamID: nil,
+    VsPlayerIDList: nil,
     VsDivision: nil,
     VsConference: nil,
+    ShotClockRange: nil,
     SeasonSegment: nil,
     Outcome: nil,
     Location: nil,
-    LeagueID: nil,
+    LeagueID: "00",
     GameSegment: nil,
+    Division: nil,
     DateTo: nil,
-    DateFrom: nil
+    DateFrom: nil,
+    Conference: nil
   ]
 
-  @required [:Season, :TeamID]
+  @required [
+    :PlayerIDList,
+    :Season,
+    :VsPlayerIDList
+  ]
 
   @doc """
-  Fetches league player on details data.
+  Fetches PlayerCompare data.
 
   ## Parameters
   - `params`: A keyword list of parameters to filter the data.
 
-    - `Season`: **(Required)** The season for which to fetch data.
+    - `PlayerIDList`: **(Required)** Comma-separated list of player IDs.
+      - _Type(s)_: `String`
+      - _Example_: `PlayerIDList: "201939,202691"`
+      - _Default_: `nil`
+
+    - `Season`: **(Required)** The season.
       - _Type(s)_: `String`
       - _Example_: `Season: "2024-25"`
       - _Default_: `nil`
 
-    - `TeamID`: **(Required)** Team ID filter.
-      - _Type(s)_: `Integer` | `String`
-      - _Example_: `TeamID: 1610612747`
+    - `VsPlayerIDList`: **(Required)** Comma-separated list of vs player IDs.
+      - _Type(s)_: `String`
+      - _Example_: `VsPlayerIDList: "201939,202691"`
       - _Default_: `nil`
 
-    - `LastNGames`: Number of most recent games to include.
+    - `LastNGames`: Number of last games to include.
       - _Type(s)_: `Integer`
-      - _Example_: `LastNGames: 0`
+      - _Example_: `LastNGames: 10`
       - _Default_: `0`
 
-    - `MeasureType`: The type of measure to return.
+    - `MeasureType`: The type of measure.
       - _Type(s)_: `String`
       - _Example_: `MeasureType: "Base"`
       - _Default_: `"Base"`
@@ -94,25 +111,25 @@ defmodule NBA.Stats.LeaguePlayerOnDetails do
         - `"Usage"`
         - `"Defense"`
 
-    - `Month`: Month filter.
+    - `Month`: The month number.
       - _Type(s)_: `Integer`
-      - _Example_: `Month: 0`
+      - _Example_: `Month: 1`
       - _Default_: `0`
 
-    - `OpponentTeamID`: Opponent team ID filter.
-      - _Type(s)_: `Integer` | `String`
-      - _Example_: `OpponentTeamID: 0`
+    - `OpponentTeamID`: The opponent team ID.
+      - _Type(s)_: `Integer | String`
+      - _Example_: `OpponentTeamID: 1610612737`
       - _Default_: `0`
 
-    - `PaceAdjust`: Whether to adjust stats for pace.
+    - `PaceAdjust`: Whether to adjust for pace.
       - _Type(s)_: `String`
-      - _Example_: `PaceAdjust: "N"`
+      - _Example_: `PaceAdjust: "Y"`
       - _Default_: `"N"`
       - _Valueset_:
         - `"Y"`
         - `"N"`
 
-    - `PerMode`: How stats are aggregated.
+    - `PerMode`: How to aggregate stats.
       - _Type(s)_: `String`
       - _Example_: `PerMode: "PerGame"`
       - _Default_: `"PerGame"`
@@ -129,22 +146,22 @@ defmodule NBA.Stats.LeaguePlayerOnDetails do
         - `"Per100Possessions"`
         - `"Per100Plays"`
 
-    - `Period`: Period filter.
+    - `Period`: The period number.
       - _Type(s)_: `Integer`
-      - _Example_: `Period: 0`
+      - _Example_: `Period: 1`
       - _Default_: `0`
 
-    - `PlusMinus`: Whether to include plus/minus splits.
+    - `PlusMinus`: Whether to include plus/minus.
       - _Type(s)_: `String`
-      - _Example_: `PlusMinus: "N"`
+      - _Example_: `PlusMinus: "Y"`
       - _Default_: `"N"`
       - _Valueset_:
         - `"Y"`
         - `"N"`
 
-    - `Rank`: Whether to include team rank.
+    - `Rank`: Whether to include rank.
       - _Type(s)_: `String`
-      - _Example_: `Rank: "N"`
+      - _Example_: `Rank: "Y"`
       - _Default_: `"N"`
       - _Valueset_:
         - `"Y"`
@@ -158,11 +175,10 @@ defmodule NBA.Stats.LeaguePlayerOnDetails do
         - `"Regular Season"`
         - `"Pre Season"`
         - `"Playoffs"`
-        - `"All Star"`
 
-    - `VsDivision`: Opponent division filter (e.g., "Atlantic", "Central", etc.).
+    - `VsDivision`: The vs division.
       - _Type(s)_: `String`
-      - _Example_: `VsDivision: "Pacific"`
+      - _Example_: `VsDivision: "Atlantic"`
       - _Default_: `nil`
       - _Valueset_:
         - `"Atlantic"`
@@ -174,23 +190,28 @@ defmodule NBA.Stats.LeaguePlayerOnDetails do
         - `"East"`
         - `"West"`
 
-    - `VsConference`: Opponent conference filter ("East", "West").
+    - `VsConference`: The vs conference.
       - _Type(s)_: `String`
-      - _Example_: `VsConference: "West"`
+      - _Example_: `VsConference: "East"`
       - _Default_: `nil`
       - _Valueset_:
         - `"East"`
         - `"West"`
 
-    - `SeasonSegment`: Season segment filter ("Post All-Star", "Pre All-Star").
+    - `ShotClockRange`: The shot clock range.
       - _Type(s)_: `String`
-      - _Example_: `SeasonSegment: "Post All-Star"`
+      - _Example_: `ShotClockRange: "24-22"`
+      - _Default_: `nil`
+
+    - `SeasonSegment`: The season segment.
+      - _Type(s)_: `String`
+      - _Example_: `SeasonSegment: "Pre All-Star"`
       - _Default_: `nil`
       - _Valueset_:
         - `"Post All-Star"`
         - `"Pre All-Star"`
 
-    - `Outcome`: Game outcome filter ("W", "L").
+    - `Outcome`: The outcome.
       - _Type(s)_: `String`
       - _Example_: `Outcome: "W"`
       - _Default_: `nil`
@@ -198,7 +219,7 @@ defmodule NBA.Stats.LeaguePlayerOnDetails do
         - `"W"`
         - `"L"`
 
-    - `Location`: Game location filter ("Home", "Road").
+    - `Location`: The location.
       - _Type(s)_: `String`
       - _Example_: `Location: "Home"`
       - _Default_: `nil`
@@ -206,7 +227,7 @@ defmodule NBA.Stats.LeaguePlayerOnDetails do
         - `"Home"`
         - `"Road"`
 
-    - `LeagueID`: League ID filter.
+    - `LeagueID`: The league ID.
       - _Type(s)_: `String`
       - _Example_: `LeagueID: "00"`
       - _Default_: `"00"`
@@ -216,24 +237,37 @@ defmodule NBA.Stats.LeaguePlayerOnDetails do
         - `"10"` (WNBA)
         - `"20"` (G League)
 
-    - `GameSegment`: Game segment filter (e.g., "First Half", "Second Half", "Overtime").
+    - `GameSegment`: The game segment.
       - _Type(s)_: `String`
       - _Example_: `GameSegment: "First Half"`
       - _Default_: `nil`
       - _Valueset_:
         - `"First Half"`
-        - `"Second Half"`
         - `"Overtime"`
+        - `"Second Half"`
 
-    - `DateTo`: End date filter (format: "MM/DD/YYYY").
+    - `Division`: The division.
       - _Type(s)_: `String`
-      - _Example_: `DateTo: "01/31/2024"`
+      - _Example_: `Division: "Atlantic"`
       - _Default_: `nil`
 
-    - `DateFrom`: Start date filter (format: "MM/DD/YYYY").
+    - `DateTo`: The end date.
       - _Type(s)_: `String`
-      - _Example_: `DateFrom: "01/01/2024"`
+      - _Example_: `DateTo: "2024-01-31"`
       - _Default_: `nil`
+
+    - `DateFrom`: The start date.
+      - _Type(s)_: `String`
+      - _Example_: `DateFrom: "2024-01-01"`
+      - _Default_: `nil`
+
+    - `Conference`: The conference.
+      - _Type(s)_: `String`
+      - _Example_: `Conference: "East"`
+      - _Default_: `nil`
+      - _Valueset_:
+        - `"East"`
+        - `"West"`
 
   - `opts`: A keyword list of additional options for the request, such as headers or timeout settings.
       - For a full list of options, see the [Req documentation](https://hexdocs.pm/req/Req.html#new/1).
@@ -243,8 +277,8 @@ defmodule NBA.Stats.LeaguePlayerOnDetails do
   - `{:error, reason}`: On failure, returns an error tuple with the reason.
 
   ## Example
-      iex> NBA.Stats.LeaguePlayerOnDetails.get(Season: "2024-25", TeamID: 1610612747)
-      {:ok, %{"LeaguePlayerOnDetails" => [%{...}, ...]}}
+      iex> NBA.Stats.PlayerCompare.get(LastNGames: 10, MeasureType: "Base", Month: 1, OpponentTeamID: 1610612737, PaceAdjust: "N", PerMode: "PerGame", Period: 1, PlayerIDList: "201939,202691", PlusMinus: "N", Rank: "N", Season: "2024-25", SeasonType: "Regular Season", VsPlayerIDList: "201939,202691")
+      {:ok, %{"PlayerCompare" => [%{...}, ...]}}
   """
   def get(params \\ @default, opts \\ []) do
     with :ok <- NBA.Utils.validate_input(params, opts, @accepted_types, @required),

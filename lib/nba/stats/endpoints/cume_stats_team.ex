@@ -32,7 +32,7 @@ defmodule NBA.Stats.CumeStatsTeam do
         - `"10"` (WNBA)
         - `"20"` (G-League)
     - `TeamID`: **(Required)** Team identifier (can be an integer or string).
-      - _Type(s)_: `Integer`, `String`
+      - _Type(s)_: `Integer` | `String`
       - _Example_: `TeamID: 1610612752` (for the New York Knicks).
     - `Season`: **(Required)** Season identifier (e.g., "2024").
       - _Type(s)_: `String`

@@ -164,7 +164,7 @@ defmodule NBA.Stats.LeagueLineupViz do
       - _Default_: `0`
 
     - `OpponentTeamID`: Opponent team ID filter.
-      - _Type(s)_: `Integer` or `String`
+      - _Type(s)_: `Integer` | `String`
       - _Example_: `OpponentTeamID: 0`
       - _Default_: `0`
 
@@ -264,7 +264,7 @@ defmodule NBA.Stats.LeagueLineupViz do
         - `"ShotClock Off"`
 
     - `TeamID`: Team ID filter.
-      - _Type(s)_: `Integer` or `String`
+      - _Type(s)_: `Integer` | `String`
       - _Example_: `TeamID: 1610612747`
       - _Default_: `nil`
 

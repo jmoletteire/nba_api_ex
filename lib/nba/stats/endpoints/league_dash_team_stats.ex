@@ -147,10 +147,10 @@ defmodule NBA.Stats.LeagueDashTeamStats do
       - _Type(s)_: `Integer`
       - _Default_: `0`
     - `OpponentTeamID`: Opponent team ID (0 for all teams).
-      - _Type(s)_: `Integer` or `String`
+      - _Type(s)_: `Integer` | `String`
       - _Default_: `0`
     - `TeamID`: Team ID (0 for all teams).
-      - _Type(s)_: `Integer` or `String`
+      - _Type(s)_: `Integer` | `String`
       - _Default_: `0`
     - `Period`: Period filter (0 for all periods).
       - _Type(s)_: `Integer`

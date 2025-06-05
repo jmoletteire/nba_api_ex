@@ -1,87 +1,92 @@
-defmodule NBA.Stats.MatchupsRollup do
+defmodule NBA.Stats.PlayerFantasyProfile do
   @moduledoc """
-  Provides functions to interact with the NBA stats API for MatchupsRollup.
+  Provides functions to interact with the NBA stats API for PlayerFantasyProfile.
 
   See `get/2` for parameter and usage details.
   """
   require NBA.Utils
   NBA.Utils.def_get_bang(__MODULE__)
 
-  @endpoint "matchupsrollup"
+  @endpoint "playerfantasyprofile"
 
   @accepted_types %{
-    LeagueID: [:string],
+    MeasureType: [:string],
+    PaceAdjust: [:string],
     PerMode: [:string],
+    PlayerID: [:integer, :string],
+    PlusMinus: [:string],
+    Rank: [:string],
     Season: [:string],
     SeasonType: [:string],
-    OffTeamID: [:integer, :string],
-    OffPlayerID: [:integer, :string],
-    DefTeamID: [:integer, :string],
-    DefPlayerID: [:integer, :string]
+    LeagueID: [:string]
   }
 
   @default [
-    LeagueID: "00",
+    MeasureType: "Base",
+    PaceAdjust: "Y",
     PerMode: "Totals",
+    PlayerID: nil,
+    PlusMinus: "Y",
+    Rank: "Y",
     Season: nil,
     SeasonType: "Regular Season",
-    OffTeamID: nil,
-    OffPlayerID: nil,
-    DefTeamID: nil,
-    DefPlayerID: nil
+    LeagueID: "00"
   ]
 
-  @required [:Season]
+  @required [:PlayerID, :Season]
 
   @doc """
-  Fetches MatchupsRollup data.
+  Fetches PlayerFantasyProfile data.
 
   ## Parameters
   - `params`: A keyword list of parameters to filter the data.
 
-    - `Season`: **(Required)** The season for which to fetch data.
+    - `PlayerID`: **(Required)** The player ID.
+      - _Type(s)_: `Integer` | `String`
+      - _Example_: `PlayerID: 201939`
+      - _Default_: `nil`
+
+    - `Season`: **(Required)** The season.
       - _Type(s)_: `String`
       - _Example_: `Season: "2024-25"`
       - _Default_: `nil`
-      - _Pattern_: `^(\\d{4}-\\d{2})$`
 
-    - `DefPlayerID`: Defensive player ID.
-      - _Type(s)_: `Integer` | `String`
-      - _Example_: `DefPlayerID: 1629029`
-      - _Default_: `nil`
-
-    - `DefTeamID`: Defensive team ID.
-      - _Type(s)_: `Integer` | `String`
-      - _Example_: `DefTeamID: 1610612737`
-      - _Default_: `nil`
-
-    - `LeagueID`: The league ID.
+    - `MeasureType`: The type of measure.
       - _Type(s)_: `String`
-      - _Example_: `LeagueID: "00"`
-      - _Default_: `"00"`
+      - _Example_: `MeasureType: "Base"`
+      - _Default_: `"Base"`
       - _Valueset_:
-        - `"00"` (NBA)
-        - `"01"` (ABA)
-        - `"10"` (WNBA)
-        - `"20"` (G League)
+        - `"Base"`
 
-    - `OffPlayerID`: Offensive player ID.
-      - _Type(s)_: `Integer` | `String`
-      - _Example_: `OffPlayerID: 1629029`
-      - _Default_: `nil`
-
-    - `OffTeamID`: Offensive team ID.
-      - _Type(s)_: `Integer` | `String`
-      - _Example_: `OffTeamID: 1610612737`
-      - _Default_: `nil`
+    - `PaceAdjust`: Whether to adjust for pace.
+      - _Type(s)_: `String`
+      - _Example_: `PaceAdjust: "N"`
+      - _Default_: `"N"`
+      - _Valueset_:
+        - `"N"`
 
     - `PerMode`: How to aggregate stats.
       - _Type(s)_: `String`
       - _Example_: `PerMode: "Totals"`
-      - _Default_: `nil`
+      - _Default_: `"Totals"`
       - _Valueset_:
         - `"Totals"`
         - `"PerGame"`
+        - `"Per36"`
+
+    - `PlusMinus`: Whether to include plus/minus.
+      - _Type(s)_: `String`
+      - _Example_: `PlusMinus: "N"`
+      - _Default_: `"N"`
+      - _Valueset_:
+        - `"N"`
+
+    - `Rank`: Whether to include rank.
+      - _Type(s)_: `String`
+      - _Example_: `Rank: "N"`
+      - _Default_: `"N"`
+      - _Valueset_:
+        - `"N"`
 
     - `SeasonType`: The type of season.
       - _Type(s)_: `String`
@@ -91,7 +96,16 @@ defmodule NBA.Stats.MatchupsRollup do
         - `"Regular Season"`
         - `"Pre Season"`
         - `"Playoffs"`
-        - `"Pre-Season"`
+
+    - `LeagueID`: The league ID.
+      - _Type(s)_: `String`
+      - _Example_: `LeagueID: "00"`
+      - _Default_: `nil`
+      - _Valueset_:
+        - `"00"` (NBA)
+        - `"01"` (ABA)
+        - `"10"` (WNBA)
+        - `"20"` (G League)
 
   - `opts`: A keyword list of additional options for the request, such as headers or timeout settings.
       - For a full list of options, see the [Req documentation](https://hexdocs.pm/req/Req.html#new/1).
@@ -101,8 +115,8 @@ defmodule NBA.Stats.MatchupsRollup do
   - `{:error, reason}`: On failure, returns an error tuple with the reason.
 
   ## Example
-      iex> NBA.Stats.MatchupsRollup.get(LeagueID: "00", PerMode: "Totals", Season: "2024-25", SeasonType: "Regular Season")
-      {:ok, %{"MatchupsRollup" => [%{...}, ...]}}
+      iex> NBA.Stats.PlayerFantasyProfile.get(PlayerID: 201939, Season: "2024-25")
+      {:ok, %{"PlayerFantasyProfile" => [%{...}, ...]}}
   """
   def get(params \\ @default, opts \\ []) do
     with :ok <- NBA.Utils.validate_input(params, opts, @accepted_types, @required),

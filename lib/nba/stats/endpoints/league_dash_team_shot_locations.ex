@@ -163,12 +163,12 @@ defmodule NBA.Stats.LeagueDashTeamShotLocations do
       - _Default_: `0`
 
     - `OpponentTeamID`: Opponent team ID (0 for all teams).
-      - _Type(s)_: `Integer` or `String`
+      - _Type(s)_: `Integer` | `String`
       - _Example_: `OpponentTeamID: 0`
       - _Default_: `0`
 
     - `TeamID`: Team ID (0 for all teams).
-      - _Type(s)_: `Integer` or `String`
+      - _Type(s)_: `Integer` | `String`
       - _Example_: `TeamID: 0`
       - _Default_: `0`
 

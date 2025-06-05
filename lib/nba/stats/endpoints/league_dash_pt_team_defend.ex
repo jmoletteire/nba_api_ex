@@ -171,7 +171,7 @@ defmodule NBA.Stats.LeagueDashPtTeamDefend do
       - _Default_: `0`
 
     - `OpponentTeamID`: The ID of the opposing team.
-      - _Type(s)_: `Integer` or `String`
+      - _Type(s)_: `Integer` | `String`
       - _Example_: `OpponentTeamID: 1610612739`
       - _Default_: `0`
 
@@ -238,7 +238,7 @@ defmodule NBA.Stats.LeagueDashPtTeamDefend do
         - `"Bench"`
 
     - `TeamID`: The NBA team ID (use `0` for all teams).
-      - _Type(s)_: `Integer` or `String`
+      - _Type(s)_: `Integer` | `String`
       - _Example_: `TeamID: 1610612747`
       - _Default_: `0`
 

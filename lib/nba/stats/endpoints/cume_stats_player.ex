@@ -32,7 +32,7 @@ defmodule NBA.Stats.CumeStatsPlayer do
         - `"10"` (WNBA)
         - `"20"` (G-League)
     - `PlayerID`: **(Required)** Player identifier (can be an integer or string).
-      - _Type(s)_: `Integer`, `String`
+      - _Type(s)_: `Integer` | `String`
       - _Example_: `PlayerID: 1630169` (for Tyrese Haliburton).
     - `Season`: **(Required)** Season identifier (e.g., "2024").
       - _Type(s)_: `String`

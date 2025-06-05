@@ -1,4 +1,4 @@
-defmodule NBA.Stats.LeagueGameFinder do
+defmodule NBA.Stats.PlayerGameStreakFinder do
   @moduledoc """
   Provides functions to interact with the NBA stats API for league game finder.
 
@@ -7,9 +7,10 @@ defmodule NBA.Stats.LeagueGameFinder do
   require NBA.Utils
   NBA.Utils.def_get_bang(__MODULE__)
 
-  @endpoint "leaguegamefinder"
+  @endpoint "playergamestreakfinder"
 
   @accepted_types %{
+    ActiveStreaksOnly: [:string],
     Conference: [:string],
     DateFrom: [:string],
     DateTo: [:string],
@@ -24,7 +25,6 @@ defmodule NBA.Stats.LeagueGameFinder do
     Outcome: [:string],
     PORound: [:integer],
     PlayerID: [:integer, :string],
-    PlayerOrTeam: [:string],
     RookieYear: [:string],
     Season: [:string],
     SeasonSegment: [:string],
@@ -101,6 +101,7 @@ defmodule NBA.Stats.LeagueGameFinder do
   }
 
   @default [
+    ActiveStreaksOnly: nil,
     Conference: nil,
     DateFrom: nil,
     DateTo: nil,
@@ -112,9 +113,9 @@ defmodule NBA.Stats.LeagueGameFinder do
     GameID: nil,
     LeagueID: "00",
     Location: nil,
+    MinGames: 0,
     Outcome: nil,
     PlayerID: nil,
-    PlayerOrTeam: "P",
     PORound: 0,
     RookieYear: nil,
     Season: nil,
@@ -191,7 +192,7 @@ defmodule NBA.Stats.LeagueGameFinder do
     EqTOV: nil
   ]
 
-  @required []
+  @required [:PlayerID, :Season]
 
   @doc """
   Fetches league game finder data.
@@ -212,6 +213,24 @@ defmodule NBA.Stats.LeagueGameFinder do
         - _Type(s)_: `Integer` or `Float`
         - _Example_: `EqPTS: 25`
         - _Default_: `nil`
+
+    - `PlayerID`: **(Required)** The NBA player ID.
+      - _Type(s)_: `Integer` | `String`
+      - _Example_: `PlayerID: 201939`
+      - _Default_: `nil`
+
+    - `Season`: **(Required)** The season for which to fetch data.
+      - _Type(s)_: `String`
+      - _Example_: `Season: "2024-25"`
+      - _Default_: `nil`
+
+    - `ActiveStreaksOnly`: Filter for active streaks only.
+      - _Type(s)_: `String`
+      - _Example_: `ActiveStreaksOnly: "Y"`
+      - _Default_: `"N"`
+      - _Valueset_:
+        - `"Y"` (Yes)
+        - `"N"` (No)
 
     - `Conference`: The conference of the team.
       - _Type(s)_: `String`
@@ -295,6 +314,11 @@ defmodule NBA.Stats.LeagueGameFinder do
         - `"Home"`
         - `"Away"`
 
+    - `MinGames`: Minimum number of games played.
+      - _Type(s)_: `Integer`
+      - _Example_: `MinGames: 5`
+      - _Default_: `0`
+
     - `Outcome`: Game outcome ("W", "L", or nil for all).
       - _Type(s)_: `String`
       - _Example_: `Outcome: "W"`
@@ -302,19 +326,6 @@ defmodule NBA.Stats.LeagueGameFinder do
       - _Valueset_:
         - `"W"`
         - `"L"`
-
-    - `PlayerID`: The NBA player ID.
-      - _Type(s)_: `Integer` | `String`
-      - _Example_: `PlayerID: 201939`
-      - _Default_: `nil`
-
-    - `PlayerOrTeam`: Whether to search for player or team games.
-      - _Type(s)_: `String`
-      - _Example_: `PlayerOrTeam: "P"`
-      - _Default_: `"P"`
-      - _Valueset_:
-        - `"P"` (Player)
-        - `"T"` (Team)
 
     - `PORound`: The playoff round (0 for regular season).
       - _Type(s)_: `Integer`
@@ -324,11 +335,6 @@ defmodule NBA.Stats.LeagueGameFinder do
     - `RookieYear`: The rookie year of the player.
       - _Type(s)_: `String`
       - _Example_: `RookieYear: "2019"`
-      - _Default_: `nil`
-
-    - `Season`: The season for which to fetch data.
-      - _Type(s)_: `String`
-      - _Example_: `Season: "2024-25"`
       - _Default_: `nil`
 
     - `SeasonSegment`: Season segment ("Post All-Star", "Pre All-Star", or nil).
