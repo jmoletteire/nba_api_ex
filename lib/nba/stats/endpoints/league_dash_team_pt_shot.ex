@@ -54,255 +54,248 @@ defmodule NBA.Stats.LeagueDashTeamPtShot do
   @required [:Season]
 
   @doc """
-  Fetches team opponent player tracking shot data.
+  Fetches team or opponent player tracking shot data.
+
   ## Parameters
   - `type`: The type of data to fetch.
     - `:team` for team data.
     - `:opp` for opponent data.
   - `params`: A keyword list of parameters to filter the data.
-    - `LeagueID`: The league ID.
-      - _Type(s)_: `String`
-      - _Example_: `LeagueID: "10"` (for WNBA)
-      - _Default_: `"00"` (NBA)
-      - _Valueset_:
-        - `"00"` (NBA)
-        - `"01"` (ABA)
-        - `"10"` (WNBA)
-        - `"20"` (G-League)
-
-    - `PerMode`: How stats are aggregated.
-      - _Type(s)_: `String`
-      - _Example_: `PerMode: "PerGame"`
-      - _Default_: `"Totals"`
-      - _Valueset_:
-        - `"Totals"` (Total stats)
-        - `"PerGame"` (Per game stats)
 
     - `Season`: **(Required)** The season for which to fetch data.
       - _Type(s)_: `String`
-      - _Example_: `Season: "2023-24"`
-      - _Default_: `"2023-24"` (current season)
+      - _Example_: `Season: "2024-25"`
+      - _Default_: `nil`
+
+    - `PerMode`: How stats are aggregated.
+      - _Type(s)_: `String`
+      - _Example_: `PerMode: "Totals"`
+      - _Default_: `"Totals"`
+      - _Valueset_:
+        - "Totals"
+        - "PerGame"
+        - "Per48"
+        - "Per40"
+        - "Per36"
+        - "PerMinute"
+        - "PerPossession"
+        - "PerPlay"
+        - "Per100Possessions"
+        - "Per100Plays"
+
+    - `LeagueID`: The league ID.
+      - _Type(s)_: `String`
+      - _Example_: `LeagueID: "00"`
+      - _Default_: `"00"`
+      - _Valueset_:
+        - "00"
+        - "10"
+        - "20"
 
     - `SeasonType`: The type of season.
       - _Type(s)_: `String`
       - _Example_: `SeasonType: "Playoffs"`
       - _Default_: `"Regular Season"`
       - _Valueset_:
-        - `"Regular Season"` (Regular season)
-        - `"Playoffs"` (Playoffs)
-        - `"Pre Season"` (Pre-season)
-        - `"All Star"` (All-Star game)
+        - "Regular Season"
+        - "Playoffs"
+        - "Pre Season"
+        - "All Star"
+        - "Play In"
 
     - `VsDivision`: The division of the opponent.
       - _Type(s)_: `String`
-      - _Example_: `VsDivision: "Central"` (Central Division)
-      - _Default_: `"All"`
+      - _Example_: `VsDivision: "Central"`
+      - _Default_: `nil`
       - _Valueset_:
-        - `"Atlantic"` (Atlantic Division)
-        - `"Central"` (Central Division)
-        - `"Southeast"` (Southeast Division)
-        - `"Northwest"` (Northwest Division)
-        - `"Pacific"` (Pacific Division)
-        - `"Southwest"` (Southwest Division)
-        - `"All"` (All divisions)
+        - "Atlantic"
+        - "Central"
+        - "Southeast"
+        - "Northwest"
+        - "Pacific"
+        - "Southwest"
 
     - `VsConference`: The conference of the opponent.
       - _Type(s)_: `String`
-      - _Example_: `VsConference: "East"` (Eastern Conference)
-      - _Default_: `"All"`
+      - _Example_: `VsConference: "East"`
+      - _Default_: `nil`
       - _Valueset_:
-        - `"East"` (Eastern Conference)
-        - `"West"` (Western Conference)
-        - `"All"` (All conferences)
+        - "East"
+        - "West"
 
-    - `TouchTimeRange`: The range of touch time.
+    - `TouchTimeRange`: The touch time range for filtering.
       - _Type(s)_: `String`
-      - _Example_: `TouchTimeRange: "2-4"` (2-4 seconds of touch time)
-      - _Default_: `"Overall"`
+      - _Example_: `TouchTimeRange: "Touch < 2 Seconds"`
+      - _Default_: `nil`
       - _Valueset_:
-        - `"Overall"` (All touch times)
-        - `"0-2"` (0-2 seconds)
-        - `"2-4"` (2-4 seconds)
-        - `"4-6"` (4-6 seconds)
-        - `"6+"` (More than 6 seconds)
+        - "Touch < 2 Seconds"
+        - "Touch 2-6 Seconds"
+        - "Touch 6+ Seconds"
 
-    - `TeamID`: The ID of the team.
+    - `TeamID`: The NBA team ID (use `0` for league-wide).
       - _Type(s)_: `Integer` or `String`
-      - _Example_: `TeamID: 1610612756` (Los Angeles Lakers)
-      - _Default_: `0` (all teams)
+      - _Example_: `TeamID: 1610612747`
+      - _Default_: `0`
 
-    - `ShotDistRange`: The range of shot distance.
+    - `ShotDistRange`: The shot distance range.
       - _Type(s)_: `String`
-      - _Example_: `ShotDistRange: "8-16"` (shots taken from 8-16 feet)
-      - _Default_: `"Overall"`
+      - _Example_: `ShotDistRange: "8-16 ft."`
+      - _Default_: `nil`
       - _Valueset_:
-        - `"Overall"` (All distances)
-        - `"0-8"` (0-8 feet)
-        - `"8-16"` (8-16 feet)
-        - `"16-24"` (16-24 feet)
-        - `"24+"` (More than 24 feet)
+        - "Less Than 8 ft."
+        - "8-16 ft."
+        - "16-24 ft."
+        - "24+ ft."
+        - "Backcourt"
 
     - `ShotClockRange`: The range of the shot clock.
       - _Type(s)_: `String`
-      - _Example_: `ShotClockRange: "0-14"` (shots taken with 0-14 seconds left)
-      - _Default_: `"0-14"`
+      - _Example_: `ShotClockRange: "24+"`
+      - _Default_: `nil`
       - _Valueset_:
-        - `"0-14"` (Shots taken with 0-14 seconds left)
-        - `"14-24"` (Shots taken with 14-24 seconds left)
-        - `"24+"` (Shots taken with more than 24 seconds left)
+        - "24+"
+        - "22-18"
+        - "15-7"
+        - "4-0"
+        - "NA"
 
     - `SeasonSegment`: The segment of the season.
       - _Type(s)_: `String`
       - _Example_: `SeasonSegment: "Post All Star"`
-      - _Default_: `""`
+      - _Default_: `nil`
       - _Valueset_:
-        - `"Pre All Star"` (Before All-Star break)
-        - `"Post All Star"` (After All-Star break)
+        - "Pre All Star"
+        - "Post All Star"
 
     - `Period`: The period of the game.
       - _Type(s)_: `Integer`
-      - _Example_: `Period: 1` (first period)
-      - _Default_: `0` (all periods)
+      - _Example_: `Period: 1`
+      - _Default_: `0`
 
     - `PORound`: The playoff round.
       - _Type(s)_: `Integer`
-      - _Example_: `PORound: 1` (first round)
-      - _Default_: `0` (not applicable)
+      - _Example_: `PORound: 1`
+      - _Default_: `0`
 
     - `Outcome`: The outcome of the game.
       - _Type(s)_: `String`
-      - _Example_: `Outcome: "W"` (wins only)
-      - _Default_: `"All"`
+      - _Example_: `Outcome: "W"`
+      - _Default_: `nil`
       - _Valueset_:
-        - `"W"` (Wins)
-        - `"L"` (Losses)
-        - `"All"` (All games)
+        - "W"
+        - "L"
 
     - `OpponentTeamID`: The ID of the opponent team.
       - _Type(s)_: `Integer` or `String`
-      - _Example_: `OpponentTeamID: 1610612739` (Golden State Warriors)
-      - _Default_: `0` (all teams)
+      - _Example_: `OpponentTeamID: 1610612739`
+      - _Default_: `0`
 
     - `Month`: The month of the season.
       - _Type(s)_: `Integer`
-      - _Example_: `Month: 1` (January)
-      - _Default_: `0` (all months)
+      - _Example_: `Month: 1`
+      - _Default_: `0`
 
     - `Location`: The location of the game.
       - _Type(s)_: `String`
-      - _Example_: `Location: "Home"` (home games only)
-      - _Default_: `"All"`
+      - _Example_: `Location: "Home"`
+      - _Default_: `nil`
       - _Valueset_:
-        - `"Home"` (Home games)
-        - `"Away"` (Away games)
-        - `"All"` (All games)
+        - "Home"
+        - "Away"
 
     - `LastNGames`: The number of last games to consider.
       - _Type(s)_: `Integer`
-      - _Example_: `LastNGames: 5` (last 5 games)
-      - _Default_: `0` (all games)
+      - _Example_: `LastNGames: 5`
+      - _Default_: `0`
 
-    - `ISTRound`: The round of the IST.
+    - `ISTRound`: The round of the In-Season Tournament.
       - _Type(s)_: `String`
-      - _Example_: `ISTRound: "All IST"` (all IST rounds)
-      - _Default_: `""`
-      - _Valueset_:
-        - `"All IST"` (All IST rounds)
-        - `"Group Play"` (Group stage)
-        - `"Knockout - All"` (Knockout stage)
-        - `"Knockout Round - Quarter"` (Quarterfinals of the knockout stage)
-        - `"Knockout Round - Semi"` (Semifinals of the knockout stage)
-        - `"Knockout Round - Championship"` (Finals of the knockout stage)
-        - `"Group Play - East Group A"` (Group A of the Eastern Conference)
-        - `"Group Play - East Group B"` (Group B of the Eastern Conference)
-        - `"Group Play - East Group C"` (Group C of the Eastern Conference)
-        - `"Group Play - West Group A"` (Group A of the Western Conference)
-        - `"Group Play - West Group B"` (Group B of the Western Conference)
-        - `"Group Play - West Group C"` (Group C of the Western Conference)
+      - _Example_: `ISTRound: "All IST"`
+      - _Default_: `nil`
 
-    - `GeneralRange`: The general range of the shot.
+    - `GeneralRange`: The general range for filtering.
       - _Type(s)_: `String`
-      - _Example_: `GeneralRange: "Overall"` (all shots)
+      - _Example_: `GeneralRange: "Overall"`
       - _Default_: `"Overall"`
       - _Valueset_:
-        - `"Overall"` (All shots)
-        - `"Restricted Area"` (Shots in the restricted area)
-        - `"In The Paint (Non-RA)"` (Shots in the paint excluding restricted area)
-        - `"Mid-Range"` (Mid-range shots)
-        - `"Left Corner 3"` (Left corner 3-point shots)
-        - `"Right Corner 3"` (Right corner 3-point shots)
-        - `"Above the Break 3"` (Above the break 3-point shots)
+        - "Overall"
+        - "Catch and Shoot"
+        - "Pull Up"
+        - "Less Than 10 ft."
+        - "10-16 ft."
+        - "16-24 ft."
+        - "24+ ft."
 
     - `GameSegment`: The segment of the game.
       - _Type(s)_: `String`
-      - _Example_: `GameSegment: "First Half"` (first half of the game)
-      - _Default_: `"All"`
+      - _Example_: `GameSegment: "First Half"`
+      - _Default_: `nil`
       - _Valueset_:
-        - `"First Half"` (First half of the game)
-        - `"Second Half"` (Second half of the game)
-        - `"Overtime"` (Overtime periods)
-        - `"All"` (All segments)
+        - "First Half"
+        - "Second Half"
+        - "Overtime"
 
-    - `DribbleRange`: The range of dribble time.
+    - `DribbleRange`: The dribble range for filtering.
       - _Type(s)_: `String`
-      - _Example_: `DribbleRange: "0-2"` (0-2 seconds of dribble time)
-      - _Default_: `"Overall"`
+      - _Example_: `DribbleRange: "0 Dribbles"`
+      - _Default_: `nil`
       - _Valueset_:
-        - `"Overall"` (All dribble times)
-        - `"0-2"` (0-2 seconds)
-        - `"2-4"` (2-4 seconds)
-        - `"4-6"` (4-6 seconds)
-        - `"6+"` (More than 6 seconds)
+        - "0 Dribbles"
+        - "1 Dribble"
+        - "2 Dribbles"
+        - "3-6 Dribbles"
+        - "7+ Dribbles"
 
     - `Division`: The division of the team.
       - _Type(s)_: `String`
-      - _Example_: `Division: "Pacific"` (Pacific Division)
-      - _Default_: `"All"`
+      - _Example_: `Division: "Pacific"`
+      - _Default_: `nil`
       - _Valueset_:
-        - `"Atlantic"` (Atlantic Division)
-        - `"Central"` (Central Division)
-        - `"Southeast"` (Southeast Division)
-        - `"Northwest"` (Northwest Division)
-        - `"Pacific"` (Pacific Division)
-        - `"Southwest"` (Southwest Division)
-        - `"All"` (All divisions)
+        - "Atlantic"
+        - "Central"
+        - "Southeast"
+        - "Northwest"
+        - "Pacific"
+        - "Southwest"
 
     - `DateTo`: The end date for filtering.
       - _Type(s)_: `String`
-      - _Example_: `DateTo: "2024-04-15"` (April 15, 2024)
-      - _Default_: `""` (no end date)
+      - _Example_: `DateTo: "2024-04-15"`
+      - _Default_: `nil`
 
     - `DateFrom`: The start date for filtering.
       - _Type(s)_: `String`
-      - _Example_: `DateFrom: "2023-10-01"` (October 1, 2023)
-      - _Default_: `""` (no start date)
+      - _Example_: `DateFrom: "2023-10-01"`
+      - _Default_: `nil`
 
     - `Conference`: The conference of the team.
       - _Type(s)_: `String`
-      - _Example_: `Conference: "West"` (Western Conference)
-      - _Default_: `"All"`
+      - _Example_: `Conference: "West"`
+      - _Default_: `nil`
       - _Valueset_:
-        - `"East"` (Eastern Conference)
-        - `"West"` (Western Conference)
-        - `"All"` (All conferences)
+        - "East"
+        - "West"
 
-    - `CloseDefDistRange`: The range of close defender distance.
+    - `CloseDefDistRange`: The defender distance range.
       - _Type(s)_: `String`
-      - _Example_: `CloseDefDistRange: "0-2"` (0-2 feet from defender)
-      - _Default_: `"Overall"`
+      - _Example_: `CloseDefDistRange: "0-2 Feet"`
+      - _Default_: `nil`
       - _Valueset_:
-        - `"Overall"` (All distances)
-        - `"0-2"` (0-2 feet)
-        - `"2-4"` (2-4 feet)
-        - `"4-6"` (4-6 feet)
-        - `"6+"` (More than 6 feet)
+        - "0-2 Feet"
+        - "2-4 Feet"
+        - "4-6 Feet"
+        - "6+ Feet"
 
   - `opts`: A keyword list of additional options for the request, such as headers or timeout settings.
       - For a full list of options, see the [Req documentation](https://hexdocs.pm/req/Req.html#new/1).
 
+  ## Returns
+  - `{:ok, data}`: On success, returns the data from the API.
+  - `{:error, reason}`: On failure, returns an error tuple with the reason.
+
   ## Example
-      iex> NBA.Stats.LeagueDashOppPtShot.get(Season: "2023-24")
-      {:ok, %{"LeagueDashPTShots" => [%{...}, ...]}}
+      iex> NBA.Stats.LeagueDashTeamPtShot.get(:team, Season: "2024-25")
+      {:ok, %{"LeagueDashTeamPtShot" => [%{...}, ...]}}
   """
   @spec get(atom(), keyword(), keyword()) :: {:ok, map()} | {:error, String.t()}
   def get(type, params \\ @default, opts \\ [])
