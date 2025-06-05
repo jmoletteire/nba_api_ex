@@ -65,6 +65,16 @@ defmodule NBA.Stats.LeaguePlayerOnDetails do
   ## Parameters
   - `params`: A keyword list of parameters to filter the data.
 
+    - `Season`: **(Required)** The season for which to fetch data.
+      - _Type(s)_: `String`
+      - _Example_: `Season: "2024-25"`
+      - _Default_: `nil`
+
+    - `TeamID`: **(Required)** Team ID filter.
+      - _Type(s)_: `Integer` or `String`
+      - _Example_: `TeamID: 1610612747`
+      - _Default_: `nil`
+
     - `LastNGames`: Number of most recent games to include.
       - _Type(s)_: `Integer`
       - _Example_: `LastNGames: 0`
@@ -140,11 +150,6 @@ defmodule NBA.Stats.LeaguePlayerOnDetails do
         - `"Y"`
         - `"N"`
 
-    - `Season`: **(Required)** The season for which to fetch data.
-      - _Type(s)_: `String`
-      - _Example_: `Season: "2024-25"`
-      - _Default_: `nil`
-
     - `SeasonType`: The type of season.
       - _Type(s)_: `String`
       - _Example_: `SeasonType: "Regular Season"`
@@ -154,11 +159,6 @@ defmodule NBA.Stats.LeaguePlayerOnDetails do
         - `"Pre Season"`
         - `"Playoffs"`
         - `"All Star"`
-
-    - `TeamID`: **(Required)** Team ID filter.
-      - _Type(s)_: `Integer` or `String`
-      - _Example_: `TeamID: 1610612747`
-      - _Default_: `nil`
 
     - `VsDivision`: Opponent division filter (e.g., "Atlantic", "Central", etc.).
       - _Type(s)_: `String`
@@ -209,7 +209,12 @@ defmodule NBA.Stats.LeaguePlayerOnDetails do
     - `LeagueID`: League ID filter.
       - _Type(s)_: `String`
       - _Example_: `LeagueID: "00"`
-      - _Default_: `nil`
+      - _Default_: `"00"`
+      - _Valueset_:
+        - `"00"` (NBA)
+        - `"01"` (ABA)
+        - `"10"` (WNBA)
+        - `"20"` (G League)
 
     - `GameSegment`: Game segment filter (e.g., "First Half", "Second Half", "Overtime").
       - _Type(s)_: `String`

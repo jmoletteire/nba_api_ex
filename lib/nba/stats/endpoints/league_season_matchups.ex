@@ -39,11 +39,21 @@ defmodule NBA.Stats.LeagueSeasonMatchups do
   ## Parameters
   - `params`: A keyword list of parameters to filter the data.
 
+    - `Season`: **(Required)** The season for which to fetch data.
+      - _Type(s)_: `String`
+      - _Example_: `Season: "2024-25"`
+      - _Default_: `nil`
+      - _Pattern_: `^(\\d{4}-\\d{2})$`
+
     - `LeagueID`: The league ID (e.g., "00" for NBA).
       - _Type(s)_: `String`
       - _Example_: `LeagueID: "00"`
       - _Default_: `"00"`
-      - _Pattern_: `^\\d{2}$`
+      - _Valueset_:
+        - `"00"` (NBA)
+        - `"01"` (ABA)
+        - `"10"` (WNBA)
+        - `"20"` (G League)
 
     - `PerMode`: How stats are aggregated.
       - _Type(s)_: `String`
@@ -52,12 +62,6 @@ defmodule NBA.Stats.LeagueSeasonMatchups do
       - _Valueset_:
         - `"Totals"`
         - `"PerGame"`
-
-    - `Season`: The season for which to fetch data.
-      - _Type(s)_: `String`
-      - _Example_: `Season: "2024-25"`
-      - _Default_: `nil`
-      - _Pattern_: `^(\\d{4}-\\d{2})$`
 
     - `SeasonType`: The type of season.
       - _Type(s)_: `String`
