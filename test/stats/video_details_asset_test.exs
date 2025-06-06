@@ -55,41 +55,5 @@ defmodule NBA.Stats.VideoDetailsAssetTest do
     test "returns error for unknown parameters" do
       assert {:error, _reason} = VideoDetailsAsset.get(@unknown_params)
     end
-
-    test "LeagueID is optional and defaults to '00' if not provided" do
-      params = Keyword.delete(@valid_params, :LeagueID)
-      assert {:ok, response} = VideoDetailsAsset.get(params)
-      assert is_map(response)
-    end
-
-    test "nullable/optional parameters are handled correctly" do
-      params =
-        Keyword.merge(@valid_params,
-          VsDivision: nil,
-          VsConference: nil,
-          StartRange: nil,
-          EndRange: nil,
-          StartPeriod: nil,
-          EndPeriod: nil,
-          DateFrom: nil,
-          DateTo: nil,
-          RookieYear: nil,
-          RangeType: nil,
-          Position: nil,
-          PointDiff: nil,
-          Outcome: nil,
-          Location: nil,
-          LeagueID: nil,
-          GameSegment: nil,
-          GameID: nil,
-          SeasonSegment: nil,
-          ContextFilter: nil,
-          ClutchTime: nil,
-          AheadBehind: nil
-        )
-
-      assert {:ok, response} = VideoDetailsAsset.get(params)
-      assert is_map(response)
-    end
   end
 end

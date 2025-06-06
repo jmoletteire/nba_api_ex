@@ -4,6 +4,8 @@ defmodule NBA.Stats.VideoDetailsAsset do
 
   See `get/2` for parameter and usage details.
   """
+  require NBA.Utils
+  NBA.Utils.def_get_bang(__MODULE__)
 
   @endpoint "videodetailsasset"
 
@@ -328,6 +330,14 @@ defmodule NBA.Stats.VideoDetailsAsset do
       {:ok, %{"VideoDetailsAsset" => [%{...}, ...]}}
   """
   def get(params \\ @default, opts \\ []) do
-    # ...existing code...
+    with :ok <- NBA.Utils.validate_input(params, opts, @accepted_types, @required),
+         params <- Keyword.merge(@default, params) do
+      case NBA.API.Stats.get(@endpoint, params, opts) do
+        {:ok, %{data: data}} -> {:ok, data}
+        other -> NBA.Utils.handle_api_error(other)
+      end
+    else
+      err -> NBA.Utils.handle_validation_error(err)
+    end
   end
 end
