@@ -202,15 +202,15 @@ defmodule NBA.Stats.PlayerGameStreakFinder do
 
     - _**Note**_: This endpoint also supports a wide range of advanced stat filters in the form of `LtX`, `GtX`, and `EqX` (e.g., `LtPTS`, `GtAST`, `EqREB`), where `X` is a stat name. These accept `Integer` or `Float` values and default to `nil`.
       - `LtX`: "Less than" filter for statistic `X`.
-        - _Type(s)_: `Integer` or `Float`
+        - _Type(s)_: `Integer` | `Float`
         - _Example_: `LtPTS: 20`
         - _Default_: `nil`
       - `GtX`: "Greater than" filter for statistic `X`.
-        - _Type(s)_: `Integer` or `Float`
+        - _Type(s)_: `Integer` | `Float`
         - _Example_: `GtPTS: 30`
         - _Default_: `nil`
       - `EqX`: "Equal to" filter for statistic `X`.
-        - _Type(s)_: `Integer` or `Float`
+        - _Type(s)_: `Integer` | `Float`
         - _Example_: `EqPTS: 25`
         - _Default_: `nil`
 

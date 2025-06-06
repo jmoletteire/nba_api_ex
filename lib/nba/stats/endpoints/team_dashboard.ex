@@ -1,18 +1,22 @@
-defmodule NBA.Stats.PlayerDashboard do
+defmodule NBA.Stats.TeamDashboard do
   @moduledoc """
-  Provides functions to interact with the NBA stats API for PlayerDashboard.
+  Provides functions to interact with the NBA stats API for TeamDashboard.
 
   See `get/2` for parameter and usage details.
   """
 
   @endpoints %{
-    clutch: "playerdashboardbyclutch",
-    game_splits: "playerdashboardbygamesplits",
-    general_splits: "playerdashboardbygeneralsplits",
-    last_n_games: "playerdashboardbylastngames",
-    shooting_splits: "playerdashboardbyshootingsplits",
-    team_performance: "playerdashboardbyteamperformance",
-    year_over_year: "playerdashboardbyyearoveryear"
+    general_splits: "teamdashboardbygeneralsplits",
+    opponent: "teamdashboardbyopponent",
+    last_n_games: "teamdashboardbylastngames",
+    game_splits: "teamdashboardbygamesplits",
+    clutch: "teamdashboardbyclutch",
+    team_performance: "teamdashboardbyteamperformance",
+    year_over_year: "teamdashboardbyyearoveryear",
+    shooting_splits: "teamdashboardbyshootingsplits",
+    players: "teamplayerdashboard",
+    on_off_detail: "teamplayeronoffdetails",
+    on_off_summary: "teamplayeronoffsummary"
   }
 
   @accepted_types %{
@@ -23,7 +27,6 @@ defmodule NBA.Stats.PlayerDashboard do
     PaceAdjust: [:string],
     PerMode: [:string],
     Period: [:integer],
-    PlayerID: [:integer, :string],
     PlusMinus: [:string],
     Rank: [:string],
     Season: [:string],
@@ -43,53 +46,57 @@ defmodule NBA.Stats.PlayerDashboard do
   }
 
   @default [
-    LastNGames: 0,
     MeasureType: "Base",
-    Month: 0,
-    OpponentTeamID: 0,
-    PaceAdjust: "N",
     PerMode: "PerGame",
-    Period: 0,
-    PlayerID: nil,
     PlusMinus: "N",
+    PaceAdjust: "N",
     Rank: "N",
+    LeagueID: "00",
     Season: nil,
     SeasonType: "Regular Season",
-    TeamID: 0,
-    VsDivision: nil,
-    VsConference: nil,
-    ShotClockRange: nil,
-    SeasonSegment: nil,
-    PORound: nil,
+    PORound: 0,
+    TeamID: nil,
     Outcome: nil,
     Location: nil,
-    LeagueID: "00",
-    GameSegment: nil,
+    Month: 0,
+    SeasonSegment: nil,
+    DateFrom: nil,
     DateTo: nil,
-    DateFrom: nil
+    OpponentTeamID: 0,
+    VsConference: nil,
+    VsDivision: nil,
+    GameSegment: nil,
+    Period: 0,
+    ShotClockRange: nil,
+    LastNGames: 0,
+    ISTRound: nil
   ]
 
-  @required [:PlayerID, :Season]
+  @required [:TeamID, :Season]
 
   @doc """
-  Fetches PlayerDashboardByClutch data.
+  Fetches TeamDashboard data.
 
   ## Parameters
-  - `type`: The type of data to fetch. This should be one of the keys in `@endpoints`, such as `:clutch`, `:game_splits`, etc.
-    - `:clutch`: Fetches clutch stats.
-    - `:game_splits`: Fetches game splits stats.
+  - `type`: The type of data to fetch.
     - `:general_splits`: Fetches general splits stats.
+    - `:opponent`: Fetches opponent stats.
     - `:last_n_games`: Fetches stats for the last N games.
-    - `:shooting_splits`: Fetches shooting splits stats.
+    - `:game_splits`: Fetches game splits stats.
+    - `:clutch`: Fetches clutch stats.
     - `:team_performance`: Fetches team performance stats.
     - `:year_over_year`: Fetches year-over-year stats.
+    - `:shooting_splits`: Fetches shooting splits stats.
+    - `:players`: Fetches player stats for a team.
+    - `:on_off_detail`: Fetches detailed on/off stats for players.
+    - `:on_off_summary`: Fetches summary on/off stats for players.
 
   - `params`: A keyword list of parameters to filter the data.
 
-    - `PlayerID`: **(Required)** The player ID.
+    - `TeamID`: **(Required)** The team ID.
       - _Type(s)_: `Integer` | `String`
-      - _Example_: `PlayerID: 201939`
-      - _Default_: `nil`
+      - _Example_: `TeamID: 1610612747`
+      - _Default_: `0` (all teams)
 
     - `Season`: **(Required)** The season.
       - _Type(s)_: `String`
@@ -222,11 +229,6 @@ defmodule NBA.Stats.PlayerDashboard do
         - `"Post All-Star"`
         - `"Pre All-Star"`
 
-    - `TeamID`: The team ID.
-      - _Type(s)_: `Integer` | `String`
-      - _Example_: `TeamID: 1610612747`
-      - _Default_: `0` (all teams)
-
     - `PORound`: The playoff round.
       - _Type(s)_: `Integer`
       - _Example_: `PORound: 1`
@@ -285,8 +287,8 @@ defmodule NBA.Stats.PlayerDashboard do
   - `{:error, reason}`: On failure, returns an error tuple with the reason.
 
   ## Example
-      iex> NBA.Stats.PlayerDashboard.get(:clutch, PlayerID: 201939, Season: "2024-25")
-      {:ok, %{"PlayerDashboardByClutch" => [%{...}, ...]}}
+      iex> NBA.Stats.TeamDashboard.get(:clutch, TeamID: 1610612747, Season: "2024-25")
+      {:ok, %{"TeamDashboardByClutch" => [%{...}, ...]}}
   """
   @spec get(atom(), keyword(), keyword()) :: {:ok, map()} | {:error, String.t()}
   def get(type, params \\ @default, opts \\ [])
@@ -315,7 +317,7 @@ defmodule NBA.Stats.PlayerDashboard do
   def get!(type, params \\ @default, opts \\ []) do
     case get(type, params, opts) do
       {:ok, data} -> data
-      {:error, reason} -> raise "Failed to fetch player dashboard data: #{reason}"
+      {:error, reason} -> raise "Failed to fetch team dashboard data: #{reason}"
     end
   end
 end
