@@ -1,5 +1,5 @@
 defmodule NBA.API.Stats do
-  @moduledoc "Handles requests to stats.nba.com endpoints."
+  @moduledoc false
 
   @base_url "https://stats.nba.com/stats"
 
@@ -35,17 +35,7 @@ defmodule NBA.API.Stats do
     {"Cache-Control", "no-cache"}
   ]
 
-  @doc """
-  Makes a GET request to the NBA stats API.
-  ## Parameters
-  - `endpoint`: The API endpoint to fetch data from.
-  - `params`: A keyword list of query parameters to include in the request.
-  ## Example
-      iex> NBA.API.Stats.get("playerawards", PlayerID: 2544)
-      {:ok, %{status: 200, body: %{"resultSets" => [%{"rowSet" => rows, "headers" => headers}]}}}
-  """
-  @spec get(String.t(), keyword(), keyword()) ::
-          {:ok, map()} | {:error, any()}
+  @doc false
   def get(endpoint, params \\ [], opts \\ [headers: @headers]) do
     # Ensure headers are set to default if not provided
     opts =

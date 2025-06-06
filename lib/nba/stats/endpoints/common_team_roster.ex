@@ -3,6 +3,8 @@ defmodule NBA.Stats.CommonTeamRoster do
   Fetches the roster for a specific NBA team.
   """
 
+  @moduledoc since: "0.1.0"
+
   require NBA.Utils
   NBA.Utils.def_get_bang(__MODULE__)
 

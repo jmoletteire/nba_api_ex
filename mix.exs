@@ -3,15 +3,16 @@ defmodule NBA.MixProject do
 
   def project do
     [
-      app: :nba_api,
+      app: :nba_api_ex,
       version: "0.1.0",
       elixir: "~> 1.18",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      name: "NBA API EX",
+      package: package(),
+      description: "Elixir client for NBA.com APIs, inspired by the Python nba_api package.",
       source_url: "https://github.com/jmoletteire/nba_api_ex",
-      homepage_url: "https://github.com/jmoletteire/nba_api_ex",
-      docs: [main: "NBA"]
+      homepage_url: "https://hexdocs.pm/nba_api_ex",
+      docs: [main: "readme", extras: ["README.md"]]
     ]
   end
 
@@ -30,8 +31,15 @@ defmodule NBA.MixProject do
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
       {:req, "~> 0.4"},
       {:jason, "~> 1.4"},
-      {:ex_doc, "~> 0.30", only: :dev, runtime: false},
-      {:castore, "~> 1.0"}
+      {:ex_doc, "~> 0.30", only: :dev, runtime: false}
+    ]
+  end
+
+  defp package do
+    [
+      name: "nba_api_ex",
+      licenses: ["MIT"],
+      links: %{"GitHub" => "https://github.com/jmoletteire/nba_api_ex"}
     ]
   end
 end

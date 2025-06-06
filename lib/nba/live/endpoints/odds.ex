@@ -3,6 +3,8 @@ defmodule NBA.Live.Odds do
   Fetches live NBA odds data.
   """
 
+  @moduledoc since: "0.1.0"
+
   @endpoint "odds/odds_todaysGames.json"
 
   @accepted_types %{}

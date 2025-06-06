@@ -3,6 +3,8 @@ defmodule NBA.Stats.LeagueDashTeamPtShot do
   Provides access to team and opponent player tracking shot data from the NBA stats API.
   """
 
+  @moduledoc since: "0.1.0"
+
   @endpoints %{
     team: "leaguedashteamptshot",
     opp: "leaguedashoppptshot"

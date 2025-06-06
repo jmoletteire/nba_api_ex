@@ -2,6 +2,9 @@ defmodule NBA.Stats.CumeStatsTeam do
   @moduledoc """
   Handles requests to the cumulative team stats endpoint.
   """
+
+  @moduledoc since: "0.1.0"
+
   require NBA.Utils
   NBA.Utils.def_get_bang(__MODULE__)
 

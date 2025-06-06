@@ -3,6 +3,8 @@ defmodule NBA.Stats.TeamGameStreakFinder do
   Provides functions to interact with the NBA stats API for TeamGameStreakFinder.
   """
 
+  @moduledoc since: "0.1.0"
+
   require NBA.Utils
   NBA.Utils.def_get_bang(__MODULE__)
 

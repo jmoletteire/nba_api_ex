@@ -3,6 +3,8 @@ defmodule NBA.Stats.BoxScore do
   Fetches box score data for a specific game.
   """
 
+  @moduledoc since: "0.1.0"
+
   @endpoints %{
     traditional: "boxscoretraditionalv3",
     advanced: "boxscoreadvancedv3",

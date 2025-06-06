@@ -1,4 +1,4 @@
-# Elixir NBA API
+# nba_api_ex
 
 An Elixir client for interacting with the NBA's public and semi-public APIs, inspired by the Python [`nba_api`](https://github.com/swar/nba_api) package.
 
@@ -29,7 +29,7 @@ This package provides comprehensive, modular access to a wide range of NBA data 
 ```elixir
 def deps do
   [
-    {:nba_api, path: "../nba_api_ex"} # Adjust the path as needed
+    {:nba_api_ex, path: "../nba_api_ex"} # Adjust the path as needed
   ]
 end
 ```
@@ -69,14 +69,6 @@ mix docs
 ```
 
 Once the package is published to Hex, documentation will be available at hexdocs.pm/nba_api.
-
-## Testing
-
-Comprehensive tests are included for all endpoints, covering valid, invalid, and unknown parameter scenarios. Run tests with:
-
-```
-mix test
-```
 
 ## License
 

@@ -3,6 +3,8 @@ defmodule NBA.Live.BoxScore do
   Fetches boxscore data for a specific NBA game.
   """
 
+  @moduledoc since: "0.1.0"
+
   require NBA.Utils
   NBA.Utils.def_get_bang(__MODULE__)
 

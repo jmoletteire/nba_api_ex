@@ -2,6 +2,9 @@ defmodule NBA.Stats.FranchiseLeaders do
   @moduledoc """
   Fetches franchise leaders data from the NBA stats API.
   """
+
+  @moduledoc since: "0.1.0"
+
   require NBA.Utils
   NBA.Utils.def_get_bang(__MODULE__)
 

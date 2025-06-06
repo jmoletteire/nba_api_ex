@@ -5,6 +5,8 @@ defmodule NBA.Stats.TeamVsPlayer do
   See `get/2` for parameter and usage details.
   """
 
+  @moduledoc since: "0.1.0"
+
   require NBA.Utils
   NBA.Utils.def_get_bang(__MODULE__)
 

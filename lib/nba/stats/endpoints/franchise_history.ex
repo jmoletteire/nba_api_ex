@@ -1,21 +1,10 @@
 defmodule NBA.Stats.FranchiseHistory do
   @moduledoc """
   Fetches franchise history data for every team.
-
-  ## Parameters
-    - `params`: A keyword list of parameters for the request.
-      - `LeagueID`: The league ID (default: "00" for NBA).
-      - `SeasonYear`: The season year (required).
-      - `opts`: Additional options for the request, such as headers or timeout settings.
-
-  ## Returns
-    - `{:ok, response}`: A map containing the franchise history data.
-    - `{:error, reason}`: An error tuple with the reason for failure.
-
-  ## Example
-    iex> NBA.Stats.FranchiseHistory.get(SeasonYear: "2023")
-    {:ok, %{data: [%{"FranchiseID" => 1, "FranchiseName" => "Lakers"}]}}
   """
+
+  @moduledoc since: "0.1.0"
+
   require NBA.Utils
   NBA.Utils.def_get_bang(__MODULE__)
 

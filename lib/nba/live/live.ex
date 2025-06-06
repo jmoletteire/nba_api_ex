@@ -1,5 +1,5 @@
 defmodule NBA.API.Live do
-  @moduledoc "Handles requests to live CDN NBA endpoints."
+  @moduledoc false
 
   @base_url "https://cdn.nba.com/static/json/liveData"
 
@@ -24,6 +24,7 @@ defmodule NBA.API.Live do
     {"Cache-Control", "max-age=0"}
   ]
 
+  @doc false
   def get(endpoint, params \\ [], opts \\ [headers: @headers]) do
     # Ensure headers are set to default if not provided
     opts =

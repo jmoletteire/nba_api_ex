@@ -3,6 +3,8 @@ defmodule NBA.Stats.CommonPlayoffSeries do
   Handles requests to the NBA Stats API for common playoff series data.
   """
 
+  @moduledoc since: "0.1.0"
+
   require NBA.Utils
   NBA.Utils.def_get_bang(__MODULE__)
 

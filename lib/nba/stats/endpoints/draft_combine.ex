@@ -1,4 +1,10 @@
 defmodule NBA.Stats.DraftCombine do
+  @moduledoc """
+  Provides functions to interact with the NBA stats API for draft combine data.
+  """
+
+  @moduledoc since: "0.1.0"
+
   @endpoints %{
     anthro: "draftcombineplayeranthro",
     drills: "draftcombinedrillresults",

@@ -2,6 +2,9 @@ defmodule NBA.Stats.LeagueDashPlayerPtShot do
   @moduledoc """
   Provides functions to interact with the NBA stats API for league dash player point shot stats.
   """
+
+  @moduledoc since: "0.1.0"
+
   require NBA.Utils
   NBA.Utils.def_get_bang(__MODULE__)
 

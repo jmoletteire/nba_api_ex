@@ -2,6 +2,9 @@ defmodule NBA.Stats.DraftHistory do
   @moduledoc """
   Provides access to the NBA Draft History endpoint.
   """
+
+  @moduledoc since: "0.1.0"
+
   require NBA.Utils
   NBA.Utils.def_get_bang(__MODULE__)
 

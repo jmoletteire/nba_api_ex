@@ -1,37 +1,9 @@
 defmodule NBA.Stats.PlayerAwards do
   @moduledoc """
   Fetches award data for a specific NBA player.
-
-  ## Example
-
-      NBA.PlayerAwards.get(PlayerID: "2544")
-      {:ok,
-       %{
-         "All-NBA" => [
-           %{
-               "ALL_NBA_TEAM_NUMBER" => "1",
-               "CONFERENCE" => "West",
-               "DESCRIPTION" => "All-NBA",
-               "SEASON" => "2019-20",
-               "TYPE" => "Award"
-             },
-             %{
-               "ALL_NBA_TEAM_NUMBER" => "2",
-               "CONFERENCE" => "West",
-               "DESCRIPTION" => "All-NBA",
-               "SEASON" => "2020-21",
-               "TYPE" => "Award"
-             },
-         ]
-       }}
-
-  ## Notes
-  - The `DESCRIPTION` field is used as the key for the awards map.
-  - The `ALL_NBA_TEAM_NUMBER` field indicates the team number for All-NBA awards.
-  - The `SEASON` field indicates the season in which the award was received.
-  - The `CONFERENCE` field indicates the conference for the award.
-  - The `TYPE` field indicates the type of award.
   """
+
+  @moduledoc since: "0.1.0"
 
   require NBA.Utils
   NBA.Utils.def_get_bang(__MODULE__)

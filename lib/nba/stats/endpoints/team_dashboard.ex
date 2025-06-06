@@ -5,6 +5,8 @@ defmodule NBA.Stats.TeamDashboard do
   See `get/2` for parameter and usage details.
   """
 
+  @moduledoc since: "0.1.0"
+
   @endpoints %{
     general_splits: "teamdashboardbygeneralsplits",
     opponent: "teamdashboardbyopponent",

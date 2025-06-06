@@ -1,17 +1,9 @@
 defmodule NBA.Stats.LeagueLeaders do
   @moduledoc """
   Fetches all-time leaders data for NBA players.
-
-  ## Example
-
-      NBA.Stats.LeagueLeaders.get()
-      {:ok, [%{"PLAYER_ID" => 2544, ...}, ...]}
-
-  ## Notes
-  - The `PLAYER_ID` field indicates the ID of the player.
-  - The `SEASON` field indicates the season in which the record was set.
-  - The `TYPE` field indicates the type of record (e.g., "Points", "Rebounds").
   """
+
+  @moduledoc since: "0.1.0"
 
   require NBA.Utils
   NBA.Utils.def_get_bang(__MODULE__)

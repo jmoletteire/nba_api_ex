@@ -2,6 +2,9 @@ defmodule NBA.Stats.AllTimeLeadersGrids do
   @moduledoc """
   Handles requests to the all-time leader grids endpoint.
   """
+
+  @moduledoc since: "0.1.0"
+
   require NBA.Utils
   NBA.Utils.def_get_bang(__MODULE__)
 

@@ -1,32 +1,9 @@
 defmodule NBA.API.Base do
-  @moduledoc """
-  Shared HTTP request logic for NBA API modules.
-  Handles param sorting, URL construction, request, and response parsing.
-  """
+  @moduledoc false
 
   alias Req
 
-  @doc """
-  Fetches data from the NBA API.
-  ## Parameters
-  - `base_url`: The base URL for the API (e.g., "https://stats.nba.com/stats").
-  - `endpoint`: The API endpoint to fetch data from.
-  - `params`: A keyword list of query parameters to include in the request.
-  - `opts`: Additional options for the request (see: https://hexdocs.pm/req/Req.html#new/1).
-  ## Returns
-  - `{:ok, response}`: A tuple containing the status and parsed response body.
-  - `{:error, reason}`: An error tuple with the reason for failure.
-  ## Notes
-  - Sorts the parameters by key to ensure consistent ordering.
-  - Encodes the parameters into a query string and constructs the full URL.
-  - Handles various HTTP response statuses and returns appropriate error messages.
-  - Uses the Req library for making HTTP requests.
-  ## Example
-      iex> NBA.API.Base.request("https://stats.nba.com/stats", [], "playerawards", PlayerID: 2544)
-      {:ok, %{status: 200, body: %{"resultSets" => [%{"rowSet" => rows, "headers" => headers}]}}}
-  """
-  @spec request(String.t(), String.t(), keyword(), keyword()) ::
-          {:ok, map()} | {:error, any()}
+  @doc false
   def request(base_url, endpoint, params, opts) do
     # Sort parameters by key to ensure consistent ordering
     # This matters for some requests that are sensitive to parameter order

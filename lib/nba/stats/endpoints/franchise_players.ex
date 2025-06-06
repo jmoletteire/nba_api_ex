@@ -2,6 +2,9 @@ defmodule NBA.Stats.FranchisePlayers do
   @moduledoc """
   Handles requests to the `franchiseplayers` endpoint of the NBA stats API.
   """
+
+  @moduledoc since: "0.1.0"
+
   require NBA.Utils
   NBA.Utils.def_get_bang(__MODULE__)
 

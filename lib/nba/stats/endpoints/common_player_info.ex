@@ -1,15 +1,9 @@
 defmodule NBA.Stats.CommonPlayerInfo do
   @moduledoc """
   Provides functions to fetch common player information from the NBA Stats API.
-
-  This module allows you to retrieve player information such as personal details,
-  career stats, and more using the NBA Stats API.
-
-  ## Example Usage
-
-      iex> NBA.Stats.CommonPlayerInfo.get(PlayerID: 2544)
-      {:ok, %{"name" => "LeBron James", ...}}
   """
+
+  @moduledoc since: "0.1.0"
 
   require NBA.Utils
   NBA.Utils.def_get_bang(__MODULE__)

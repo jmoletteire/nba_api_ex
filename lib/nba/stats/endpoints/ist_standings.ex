@@ -2,6 +2,9 @@ defmodule NBA.Stats.ISTStandings do
   @moduledoc """
   Fetches NBA Cup standings data.
   """
+
+  @moduledoc since: "0.1.0"
+
   require NBA.Utils
   NBA.Utils.def_get_bang(__MODULE__)
 

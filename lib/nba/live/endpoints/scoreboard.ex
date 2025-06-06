@@ -3,6 +3,8 @@ defmodule NBA.Live.Scoreboard do
   Fetches the NBA scoreboard data for a specific date.
   """
 
+  @moduledoc since: "0.1.0"
+
   @endpoint "scoreboard/todaysScoreboard_00.json"
 
   @accepted_types %{}

@@ -5,6 +5,8 @@ defmodule NBA.Stats.TeamDashPt do
   See `get/2` for parameter and usage details.
   """
 
+  @moduledoc since: "0.1.0"
+
   @endpoints %{
     passing: "teamdashptpass",
     rebounding: "teamdashptreb",
