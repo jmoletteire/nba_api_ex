@@ -29,7 +29,6 @@ defmodule NBA.Stats.TeamVsPlayerTest do
     test "returns team vs player data with valid parameters" do
       assert {:ok, resp} = TeamVsPlayer.get(@valid_params)
       assert is_map(resp)
-      IO.inspect(resp, label: "TeamVsPlayer Response")
     end
 
     test "returns error for invalid parameters" do

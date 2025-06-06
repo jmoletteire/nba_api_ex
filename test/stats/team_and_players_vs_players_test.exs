@@ -94,7 +94,7 @@ defmodule NBA.Stats.TeamAndPlayersVsPlayersTest do
 
     test "returns error for missing required parameters" do
       assert {:error,
-              "Missing required parameter(s): :LastNGames, :MeasureType, :Month, :OpponentTeamID, :PaceAdjust, :PerMode, :Period, :PlayerID1, :PlayerID2, :PlayerID3, :PlayerID4, :PlayerID5, :PlusMinus, :Rank, :Season, :SeasonType, :TeamID, :VsPlayerID1, :VsPlayerID2, :VsPlayerID3, :VsPlayerID4, :VsPlayerID5, :VsTeamID" <>
+              "Missing required parameter(s): :PlayerID1, :PlayerID2, :PlayerID3, :PlayerID4, :PlayerID5, :Season, :TeamID, :VsPlayerID1, :VsPlayerID2, :VsPlayerID3, :VsPlayerID4, :VsPlayerID5, :VsTeamID" <>
                 _} = TeamAndPlayersVsPlayers.get([])
     end
 
@@ -104,27 +104,6 @@ defmodule NBA.Stats.TeamAndPlayersVsPlayersTest do
 
     test "returns error for unknown parameters" do
       assert {:error, _reason} = TeamAndPlayersVsPlayers.get(@unknown_params)
-    end
-
-    test "nullable/optional parameters are handled correctly" do
-      params =
-        Keyword.merge(@valid_params,
-          VsDivision: nil,
-          VsConference: nil,
-          ShotClockRange: nil,
-          SeasonSegment: nil,
-          Outcome: nil,
-          Location: nil,
-          LeagueID: nil,
-          GameSegment: nil,
-          Division: nil,
-          DateTo: nil,
-          DateFrom: nil,
-          Conference: nil
-        )
-
-      assert {:ok, response} = TeamAndPlayersVsPlayers.get(params)
-      assert is_map(response)
     end
   end
 end

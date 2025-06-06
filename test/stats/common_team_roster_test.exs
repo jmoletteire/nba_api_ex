@@ -10,7 +10,7 @@ defmodule NBA.Stats.CommonTeamRosterTest do
   describe "get/2" do
     test "returns data for valid parameters" do
       assert {:ok, data} = CommonTeamRoster.get(@valid_params)
-      IO.inspect(data, label: "CommonTeamRoster Data")
+      # IO.inspect(data, label: "CommonTeamRoster Data")
     end
 
     test "returns error for invalid parameters" do

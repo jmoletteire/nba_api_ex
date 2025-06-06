@@ -9,7 +9,7 @@ defmodule NBA.Stats.CommonTeamYearsTest do
   describe "get/2" do
     test "returns data for valid parameters" do
       assert {:ok, data} = CommonTeamYears.get(@valid_params)
-      IO.inspect(data, label: "CommonTeamYears Data")
+      # IO.inspect(data, label: "CommonTeamYears Data")
     end
 
     test "returns error for invalid parameters" do

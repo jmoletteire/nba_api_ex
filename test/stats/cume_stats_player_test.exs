@@ -19,7 +19,7 @@ defmodule NBA.Stats.CumeStatsPlayerTest do
   describe "get/2" do
     test "returns data for valid parameters" do
       assert {:ok, data} = CumeStatsPlayer.get(@valid_params)
-      IO.inspect(data, label: "CumeStatsPlayer Data")
+      # IO.inspect(data, label: "CumeStatsPlayer Data")
     end
 
     test "returns error for invalid parameters" do

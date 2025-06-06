@@ -8,7 +8,7 @@ defmodule NBA.Stats.FranchiseLeadersTest do
   describe "get/2" do
     test "returns franchise history data for valid params" do
       assert {:ok, data} = FranchiseLeaders.get(@valid_params)
-      IO.inspect(data, label: "Franchise Leaders Data")
+      # IO.inspect(data, label: "Franchise Leaders Data")
     end
 
     test "returns error for invalid params" do

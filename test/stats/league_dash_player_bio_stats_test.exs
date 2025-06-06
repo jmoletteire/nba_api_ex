@@ -23,7 +23,7 @@ defmodule NBA.Stats.LeagueDashPlayerBioStatsTest do
     test "returns player bio stats with valid parameters" do
       assert {:ok, response} = LeagueDashPlayerBioStats.get(@valid_params)
       assert is_map(response)
-      IO.inspect(response, label: "LeagueDashPlayerBioStats.get/2 response")
+      # IO.inspect(response, label: "LeagueDashPlayerBioStats.get/2 response")
     end
 
     test "get!/2 returns player bio stats with valid parameters" do

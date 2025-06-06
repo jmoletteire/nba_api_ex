@@ -19,7 +19,7 @@ defmodule NBA.Stats.LeagueDashTeamPtShotTest do
     test "get!/2 returns league lineup data with default parameters" do
       assert response = LeagueDashTeamPtShot.get!(:team, Season: "2024-25")
       assert is_map(response)
-      IO.inspect(response, label: "LeagueDashOppPtShot.get!/2 response")
+      # IO.inspect(response, label: "LeagueDashOppPtShot.get!/2 response")
     end
 
     test "returns error for missing required parameters" do

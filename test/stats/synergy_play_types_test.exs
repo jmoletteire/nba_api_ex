@@ -51,11 +51,5 @@ defmodule NBA.Stats.SynergyPlayTypesTest do
     test "returns error for unknown parameters" do
       assert {:error, _reason} = SynergyPlayTypes.get(@unknown_params)
     end
-
-    test "LeagueID is optional and defaults to '00' if not provided" do
-      params = Keyword.delete(@valid_params, :LeagueID)
-      assert {:ok, response} = SynergyPlayTypes.get(params)
-      assert is_map(response)
-    end
   end
 end

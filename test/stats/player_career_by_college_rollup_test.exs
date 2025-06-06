@@ -38,9 +38,9 @@ defmodule NBA.Stats.PlayerCareerByCollegeRollupTest do
       assert is_map(response)
     end
 
-    test "returns error for missing required parameters" do
-      assert {:error, "Missing required parameter(s): :LeagueID" <> _} =
-               PlayerCareerByCollegeRollup.get([])
+    test "no required parameters" do
+      assert {:ok, response} = PlayerCareerByCollegeRollup.get([])
+      assert is_map(response)
     end
 
     test "returns error for invalid parameters" do

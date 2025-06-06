@@ -2,15 +2,23 @@
 
 An Elixir client for interacting with the NBA's public and semi-public APIs, inspired by the Python [`nba_api`](https://github.com/swar/nba_api) package.
 
-This package aims to make it easy to query NBA data (e.g., player awards, live scores, stats) from both `stats.nba.com` and `cdn.nba.com`, with support for features like:
+This package provides comprehensive, modular access to a wide range of NBA data endpoints from both `stats.nba.com` and `cdn.nba.com`, including:
 
-- Modular endpoint access via `NBA.API.Stats` and `NBA.API.Live`
+- Player, team, and league stats (regular season, playoffs, advanced, hustle, clutch, etc.)
+- Game logs, play-by-play, shot charts, and win probability
+- Awards, lineups, matchups, and historical data
+- Video metadata and asset endpoints
+- And much more, closely following the official NBA API parameter lists and conventions
+
+**Features:**
+
+- Modular endpoint modules under `NBA.Stats` and `NBA.Live` (e.g., `NBA.Stats.TeamGameLogs`, `NBA.Live.Scoreboard`)
+- All parameters, types, defaults, and valuesets are documented per endpoint
+- Consistent, well-tested interface for all endpoints
 - JSON parsing and structured results
 - Retry and error handling built in
-- Proxy support (e.g., BrightData)
-- Extensible endpoint modules
 
-⚠️ This is a work-in-progress and currently includes basic support for endpoints like `playerawards`.
+⚠️ This project is a work-in-progress, but already supports dozens of endpoints with full parameter coverage and comprehensive tests.
 
 ---
 
@@ -28,21 +36,46 @@ end
 
 ## Usage
 
+Each endpoint is available as a module under `NBA.Stats`. All parameters are passed as a keyword list, with defaults and valuesets documented in each module.
+
 Example:
 
 ```elixir
-NBA.PlayerAwards.get(2544)
-# => {:ok, %{"PlayerAwards" => [...]}}
+NBA.Stats.TeamGameLogs.get(TeamID: 1610612744, Season: "2024-25")
+# => {:ok, %{"TeamGameLogs" => [...]}}
+
+NBA.Live.Scoreboard.get()
+# => {:ok, [%{"gameId" => "0042400311", ...}, ...]}
 ```
+
+Bang(!) Example:
+
+```elixir
+NBA.Stats.TeamGameLogs.get!(TeamID: 1610612744, Season: "2024-25")
+# => %{"TeamGameLogs" => [...]}
+
+NBA.Live.Scoreboard.get!()
+# => [%{"gameId" => "0042400311", ...}, ...]
+```
+
+See the module docs for each endpoint for full parameter details and examples.
 
 ## Docs
 
-Once the package is published to Hex, documentation will be available at hexdocs.pm/nba_api.
-
-Until then, you can generate local docs with:
+You can generate local docs with:
 
 ```
 mix docs
+```
+
+Once the package is published to Hex, documentation will be available at hexdocs.pm/nba_api.
+
+## Testing
+
+Comprehensive tests are included for all endpoints, covering valid, invalid, and unknown parameter scenarios. Run tests with:
+
+```
+mix test
 ```
 
 ## License

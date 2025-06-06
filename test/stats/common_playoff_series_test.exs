@@ -9,7 +9,7 @@ defmodule NBA.Stats.CommonPlayoffSeriesTest do
   describe "get/2" do
     test "returns data for valid parameters" do
       assert {:ok, data} = CommonPlayoffSeries.get(@valid_params)
-      IO.inspect(data, label: "CommonPlayoffSeries Data")
+      # IO.inspect(data, label: "CommonPlayoffSeries Data")
     end
 
     test "returns error for invalid parameters" do

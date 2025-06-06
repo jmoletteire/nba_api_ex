@@ -54,14 +54,22 @@ defmodule NBA.Stats.TeamDashboardTest do
       assert is_map(response)
     end
 
-    test "clutch" do
-      assert {:ok, response} = TeamDashboard.get(:clutch, @valid_params)
+    test "get!/2 returns team dashboard by clutch data with valid parameters" do
+      assert response = TeamDashboard.get!(:clutch, @valid_params)
       assert is_map(response)
     end
 
-    test "game splits" do
-      assert {:ok, response} = TeamDashboard.get(:game_splits, @valid_params)
-      assert is_map(response)
+    test "returns error for missing required parameters" do
+      assert {:error, "Missing required parameter(s): :TeamID, :Season" <> _} =
+               TeamDashboard.get(:clutch, [])
+    end
+
+    test "returns error for invalid parameters" do
+      assert {:error, _reason} = TeamDashboard.get(:clutch, @invalid_params)
+    end
+
+    test "returns error for unknown parameters" do
+      assert {:error, _reason} = TeamDashboard.get(:clutch, @unknown_params)
     end
 
     test "general splits" do
@@ -79,8 +87,13 @@ defmodule NBA.Stats.TeamDashboardTest do
       assert is_map(response)
     end
 
-    test "shooting splits" do
-      assert {:ok, response} = TeamDashboard.get(:shooting_splits, @valid_params)
+    test "game splits" do
+      assert {:ok, response} = TeamDashboard.get(:game_splits, @valid_params)
+      assert is_map(response)
+    end
+
+    test "clutch" do
+      assert {:ok, response} = TeamDashboard.get(:clutch, @valid_params)
       assert is_map(response)
     end
 
@@ -91,6 +104,11 @@ defmodule NBA.Stats.TeamDashboardTest do
 
     test "YoY" do
       assert {:ok, response} = TeamDashboard.get(:year_over_year, @valid_params)
+      assert is_map(response)
+    end
+
+    test "shooting splits" do
+      assert {:ok, response} = TeamDashboard.get(:shooting_splits, @valid_params)
       assert is_map(response)
     end
 
@@ -107,24 +125,6 @@ defmodule NBA.Stats.TeamDashboardTest do
     test "On/Off Summary" do
       assert {:ok, response} = TeamDashboard.get(:on_off_summary, @valid_params)
       assert is_map(response)
-    end
-
-    test "get!/2 returns team dashboard by clutch data with valid parameters" do
-      assert response = TeamDashboard.get!(:clutch, @valid_params)
-      assert is_map(response)
-    end
-
-    test "returns error for missing required parameters" do
-      assert {:error, "Missing required parameter(s): :TeamID, :Season" <> _} =
-               TeamDashboard.get(:clutch, [])
-    end
-
-    test "returns error for invalid parameters" do
-      assert {:error, _reason} = TeamDashboard.get(:clutch, @invalid_params)
-    end
-
-    test "returns error for unknown parameters" do
-      assert {:error, _reason} = TeamDashboard.get(:clutch, @unknown_params)
     end
   end
 end

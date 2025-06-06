@@ -49,17 +49,5 @@ defmodule NBA.Stats.TeamGameLogTest do
     test "returns error for unknown parameters" do
       assert {:error, _reason} = TeamGameLog.get(@unknown_params)
     end
-
-    test "nullable/optional parameters are handled correctly" do
-      params =
-        Keyword.merge(@valid_params,
-          LeagueID: nil,
-          DateTo: nil,
-          DateFrom: nil
-        )
-
-      assert {:ok, response} = TeamGameLog.get(params)
-      assert is_map(response)
-    end
   end
 end

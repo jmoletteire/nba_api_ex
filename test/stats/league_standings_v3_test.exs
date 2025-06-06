@@ -4,7 +4,7 @@ defmodule NBA.Stats.LeagueStandingsV3Test do
 
   @valid_params [
     LeagueID: "00",
-    Season: "2024-25",
+    SeasonYear: "2024-25",
     SeasonType: "Regular Season"
   ]
 
@@ -12,7 +12,7 @@ defmodule NBA.Stats.LeagueStandingsV3Test do
     # should be string
     LeagueID: 0,
     # should be string
-    Season: 202_425,
+    SeasonYear: 202_425,
     # not in valueset
     SeasonType: "Season"
   ]
@@ -20,7 +20,7 @@ defmodule NBA.Stats.LeagueStandingsV3Test do
   @unknown_params [
     RandomParam: "invalid",
     LeagueID: "00",
-    Season: "2024-25",
+    SeasonYear: "2024-25",
     SeasonType: "Regular Season"
   ]
 
@@ -36,7 +36,7 @@ defmodule NBA.Stats.LeagueStandingsV3Test do
     end
 
     test "returns error for missing required parameters" do
-      assert {:error, "Missing required parameter(s): :Season" <> _} =
+      assert {:error, "Missing required parameter(s): :SeasonYear" <> _} =
                LeagueStandingsV3.get([])
     end
 

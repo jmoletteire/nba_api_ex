@@ -2,53 +2,55 @@ defmodule NBA.Stats.PlayerNextNGamesTest do
   use ExUnit.Case, async: true
   alias NBA.Stats.PlayerNextNGames
 
-  describe ".get/2" do
-    @valid_params [
-      NumberOfGames: 5,
-      PlayerID: 201_939,
-      Season: "2024-25",
-      SeasonType: "Regular Season",
-      LeagueID: "00"
-    ]
+  @valid_params [
+    NumberOfGames: 5,
+    PlayerID: 201_939,
+    Season: "2024-25",
+    SeasonType: "Regular Season",
+    LeagueID: "00"
+  ]
 
+  @invalid_params [
+    NumberOfGames: "five",
+    PlayerID: "foo",
+    Season: "202425",
+    SeasonType: "Midseason",
+    LeagueID: 0
+  ]
+
+  @unknown_params [
+    NumberOfGames: 5,
+    PlayerID: 201_939,
+    Season: "2024-25",
+    SeasonType: "Regular Season",
+    LeagueID: "00",
+    UnknownParam: "foo"
+  ]
+
+  describe "get/2" do
     test "returns data with valid parameters" do
       assert {:ok, data} = PlayerNextNGames.get(@valid_params)
       assert is_map(data)
     end
 
-    test "fails with missing required parameters" do
-      # Missing PlayerID
+    test "get!/2 returns data with valid parameters" do
+      assert response = PlayerNextNGames.get!(@valid_params)
+      assert is_map(response)
+    end
+
+    test "returns error for missing required parameters" do
       params = Keyword.delete(@valid_params, :PlayerID)
       assert {:error, _} = PlayerNextNGames.get(params)
-
-      # Missing Season
       params = Keyword.delete(@valid_params, :Season)
       assert {:error, _} = PlayerNextNGames.get(params)
     end
 
-    test "fails with invalid parameter types" do
-      # NumberOfGames as string
-      params = Keyword.put(@valid_params, :NumberOfGames, "five")
-      assert {:error, _} = PlayerNextNGames.get(params)
-
-      # Season with invalid pattern
-      params = Keyword.put(@valid_params, :Season, "202425")
-      assert {:error, _} = PlayerNextNGames.get(params)
-
-      # SeasonType with invalid value
-      params = Keyword.put(@valid_params, :SeasonType, "Midseason")
-      assert {:error, _} = PlayerNextNGames.get(params)
+    test "returns error for invalid parameter types or values" do
+      assert {:error, _} = PlayerNextNGames.get(@invalid_params)
     end
 
-    test "handles unknown parameters gracefully" do
-      params = Keyword.put(@valid_params, :UnknownParam, "foo")
-      assert {:error, _} = PlayerNextNGames.get(params)
-    end
-
-    test "LeagueID is optional and defaults to '00' if not provided" do
-      params = Keyword.delete(@valid_params, :LeagueID)
-      assert {:ok, data} = PlayerNextNGames.get(params)
-      assert is_map(data)
+    test "returns error for unknown parameters" do
+      assert {:error, _} = PlayerNextNGames.get(@unknown_params)
     end
   end
 end

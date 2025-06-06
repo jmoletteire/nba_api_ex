@@ -30,6 +30,13 @@ defmodule NBA.Stats.PlayerGameStreakFinderTest do
       assert is_map(response)
     end
 
+    test "returns error for missing required parameters" do
+      params = Keyword.delete(@valid_params, :PlayerID)
+      assert {:error, _} = PlayerGameStreakFinder.get(params)
+      params = Keyword.delete(@valid_params, :Season)
+      assert {:error, _} = PlayerGameStreakFinder.get(params)
+    end
+
     test "returns error for invalid parameters" do
       assert {:error, _reason} = PlayerGameStreakFinder.get(@invalid_params)
     end

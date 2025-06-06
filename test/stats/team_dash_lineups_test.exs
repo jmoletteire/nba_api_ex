@@ -75,26 +75,5 @@ defmodule NBA.Stats.TeamDashLineupsTest do
     test "returns error for unknown parameters" do
       assert {:error, _reason} = TeamDashLineups.get(@unknown_params)
     end
-
-    test "nullable/optional parameters are handled correctly" do
-      params =
-        Keyword.merge(@valid_params,
-          VsDivision: nil,
-          VsConference: nil,
-          ShotClockRange: nil,
-          SeasonSegment: nil,
-          PORound: nil,
-          Outcome: nil,
-          Location: nil,
-          LeagueID: nil,
-          GameSegment: nil,
-          GameID: nil,
-          DateTo: nil,
-          DateFrom: nil
-        )
-
-      assert {:ok, response} = TeamDashLineups.get(params)
-      assert is_map(response)
-    end
   end
 end

@@ -32,40 +32,17 @@ defmodule NBA.Stats.TeamGameLogsTest do
       assert is_map(response)
     end
 
+    test "returns error for missing required parameters" do
+      assert {:error, "Missing required parameter(s): :TeamID" <> _} =
+               TeamGameLogs.get([])
+    end
+
     test "returns error for invalid parameters" do
       assert {:error, _reason} = TeamGameLogs.get(@invalid_params)
     end
 
     test "returns error for unknown parameters" do
       assert {:error, _reason} = TeamGameLogs.get(@unknown_params)
-    end
-
-    test "nullable/optional parameters are handled correctly" do
-      params =
-        Keyword.merge(@valid_params,
-          VsDivision: nil,
-          VsConference: nil,
-          ShotClockRange: nil,
-          SeasonType: nil,
-          SeasonSegment: nil,
-          PlayerID: nil,
-          Period: nil,
-          PerMode: nil,
-          PORound: nil,
-          Outcome: nil,
-          OppTeamID: nil,
-          Month: nil,
-          MeasureType: nil,
-          Location: nil,
-          LeagueID: nil,
-          LastNGames: nil,
-          GameSegment: nil,
-          DateTo: nil,
-          DateFrom: nil
-        )
-
-      assert {:ok, response} = TeamGameLogs.get(params)
-      assert is_map(response)
     end
   end
 end

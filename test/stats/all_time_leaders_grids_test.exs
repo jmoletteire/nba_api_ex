@@ -9,7 +9,7 @@ defmodule NBA.Stats.AllTimeLeadersGridsTest do
   describe "get/2" do
     test "returns data for valid parameters" do
       assert {:ok, data} = AllTimeLeadersGrids.get(@valid_params)
-      IO.inspect(data, label: "AllTimeLeaderGrids Data")
+      # IO.inspect(data, label: "AllTimeLeaderGrids Data")
     end
 
     test "returns error for invalid parameters" do

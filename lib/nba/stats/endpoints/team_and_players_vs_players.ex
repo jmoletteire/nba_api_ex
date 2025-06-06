@@ -86,22 +86,12 @@ defmodule NBA.Stats.TeamAndPlayersVsPlayers do
   ]
 
   @required [
-    :LastNGames,
-    :MeasureType,
-    :Month,
-    :OpponentTeamID,
-    :PaceAdjust,
-    :PerMode,
-    :Period,
     :PlayerID1,
     :PlayerID2,
     :PlayerID3,
     :PlayerID4,
     :PlayerID5,
-    :PlusMinus,
-    :Rank,
     :Season,
-    :SeasonType,
     :TeamID,
     :VsPlayerID1,
     :VsPlayerID2,
