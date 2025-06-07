@@ -66,10 +66,13 @@ defmodule NBA.Stats.BoxScore do
       - `hustle`: Fetches hustle box score data.
       - `defense`: Fetches defensive box score data.
       - `matchups`: Fetches matchups box score data.
+
     - `params`: A keyword list of parameters for the request.
+
       - `GameID`: **(Required)** The unique identifier for the game.
         - _Type(s)_: Numeric `String`.
         - _Example_: `GameID: "0022200001"` (for a specific game).
+
       - `LeagueID`: The league ID.
         - _Type(s)_: Numeric `String`.
         - _Default_: `"00"` (NBA).
@@ -79,6 +82,7 @@ defmodule NBA.Stats.BoxScore do
           - `"01"` (ABA)
           - `"10"` (WNBA)
           - `"20"` (G-League)
+
       - `endPeriod`: The end period for the box score data.
         - _Type(s)_: `Integer`.
         - _Default_: `0` (all periods).
@@ -87,23 +91,27 @@ defmodule NBA.Stats.BoxScore do
         - _Type(s)_: `Integer`.
         - _Default_: `31800` (full game).
         - _Example_: `endRange: 3600` (for the first hour).
+
       - `rangeType`: The type of range for the box score data.
         - _Type(s)_: `Integer`.
         - _Default_: `0` (full game).
         - _Example_: `rangeType: 1` (for first half).
+
       - `startPeriod`: The start period for the box score data.
         - _Type(s)_: `Integer`.
         - _Default_: `0` (all periods).
         - _Example_: `startPeriod: 1`.
+
       - `startRange`: The start range for the box score data in seconds.
         - _Type(s)_: `Integer`.
         - _Default_: `0` (start of game).
         - _Example_: `startRange: 1800` (for the first 30 minutes).
+
       - `opts`: A keyword list of additional options for the request, such as headers or timeout settings.
         - For a list of available options, see the [Req documentation](https://hexdocs.pm/req/Req.html#new/1).
 
   ## Example
-      iex> NBA.API.BoxScore.get(:traditional, GameID: "0022200001")
+      iex> NBA.Stats.BoxScore.get(:traditional, GameID: "0022200001")
       {:ok, [%{"gameId" => "0022200001", ...}, ...]}
 
   ## Returns

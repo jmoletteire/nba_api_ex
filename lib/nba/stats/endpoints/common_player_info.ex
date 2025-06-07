@@ -26,9 +26,11 @@ defmodule NBA.Stats.CommonPlayerInfo do
 
   ## Parameters
   - `params`: A keyword list of parameters to filter the player information.
+
     - `PlayerID`: **(Required)** The unique identifier for the player.
       - _Type(s)_: `Integer` | `String`
       - _Example_: `PlayerID: 2544` or `PlayerID: "2544"` (for LeBron James).
+
     - `LeagueID`: The league ID.
       - _Type(s)_: Numeric `String`
       - _Default_: `"00"` (NBA).
@@ -38,6 +40,7 @@ defmodule NBA.Stats.CommonPlayerInfo do
         - `"01"` (ABA)
         - `"10"` (WNBA)
         - `"20"` (G-League)
+
   - `opts`: A keyword list of additional options for the request, such as headers or timeout settings.
     - For a list of available options, see the [Req documentation](https://hexdocs.pm/req/Req.html#new/1).
 

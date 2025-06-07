@@ -21,9 +21,11 @@ defmodule NBA.Live.BoxScore do
 
   ## Parameters
   - `params`: A keyword list of parameters for the request.
+
       - `GameID`: **(Required)** The unique identifier for the game.
         - _Type(s)_: Numeric `String`.
         - _Example_: `GameID: "0022200001"` (for a specific game).
+
   - `opts`: A keyword list of additional options for the request, such as headers or timeout settings.
         - For a list of available options, see the [Req documentation](https://hexdocs.pm/req/Req.html#new/1).
 

@@ -18,9 +18,23 @@ defmodule NBA.Stats.FranchiseLeaders do
   Fetches franchise leaders data for a specific team.
   ## Parameters
     - `params`: A keyword list of parameters for the request.
+
       - `TeamID`: **(Required)** The team ID.
+        - _Type(s)_: `Integer`, `String`
+        - _Example_: `TeamID: 1610612739` (Los Angeles Lakers)
+
       - `LeagueID`: The league ID (default: "00" for NBA).
+        - _Type(s)_: `String`
+        - _Example_: `LeagueID: "00"`
+        - _Default_: `"00"`
+        - _Valueset_:
+          - "00" (NBA)
+          - "01" (ABA)
+          - "10" (WNBA)
+          - "20" (G League)
+
     - `opts`: Additional options for the request, such as headers or timeout settings.
+      - For a full list of options, see the [Req documentation](https://hexdocs.pm/req/Req.html#new/1).
 
   ## Returns
     - `{:ok, response}`: A map containing the franchise leaders data.
